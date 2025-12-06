@@ -2,6 +2,7 @@ import React from 'react';
 import TopServices from '../../components/Home/TopServices';
 import TopDecorators from '../../components/Home/TopDecorators';
 import SimpleHomeHero from '../../components/Home/HomeHero';
+import ServiceCoverageMap from '../../components/Home/ServiceCoverageMap';
 
 const Home = () => {
     return (
@@ -9,6 +10,7 @@ const Home = () => {
             <TopServices></TopServices>
             <TopDecorators></TopDecorators>
             <SimpleHomeHero></SimpleHomeHero>
+            <ServiceCoverageMap></ServiceCoverageMap>
         </div>
     );
 };
