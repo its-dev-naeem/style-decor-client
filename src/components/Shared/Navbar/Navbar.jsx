@@ -12,7 +12,10 @@ const Navbar = () => {
   <li><NavLink to='/contact' className='text-primary'>Contact</NavLink></li>
   {
     isLoggedIn && 
+    <>
+    <li><NavLink to='/coverage' className='text-primary'>Coverage</NavLink></li>
     <li><NavLink to='/dashboard' className='text-primary'>Dashboard</NavLink></li>
+    </>
   }
   </>
 
