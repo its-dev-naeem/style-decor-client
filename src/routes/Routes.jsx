@@ -7,6 +7,7 @@ import Services from '../pages/Services/Services'
 import About from '../pages/About/About'
 import Contact from '../pages/Contact/Contact'
 import DashboardLayout from '../layouts/DashboardLayout'
+import Dashboard from '../pages/Dashboard/Dashbord'
 
 export const router = createBrowserRouter([
   {
@@ -30,6 +31,10 @@ export const router = createBrowserRouter([
         path: '/contact',
         element: <Contact/>
       },
+      {
+        path: '/coverage',
+        element: <Contact/>
+      },
     ],
   },
   { path: '/login', element: <Home /> },
@@ -42,7 +47,7 @@ export const router = createBrowserRouter([
     children: [
       {
         index: true,
-        element: <About/>
+        element: <Dashboard/>
       },
 
     ],
