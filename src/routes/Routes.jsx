@@ -1,17 +1,16 @@
-
-import { createBrowserRouter } from 'react-router'
-import ErrorPage from '../pages/ErrorPage'
-import MainLayout from '../layouts/MainLayout'
-import Home from '../pages/Home/Home'
-import Services from '../pages/Services/Services'
-import About from '../pages/About/About'
-import Contact from '../pages/Contact/Contact'
-import DashboardLayout from '../layouts/DashboardLayout'
-import Dashboard from '../pages/Dashboard/Dashbord'
+import { createBrowserRouter } from "react-router";
+import ErrorPage from "../pages/ErrorPage";
+import MainLayout from "../layouts/MainLayout";
+import Home from "../pages/Home/Home";
+import Services from "../pages/Services/Services";
+import About from "../pages/About/About";
+import Contact from "../pages/Contact/Contact";
+import DashboardLayout from "../layouts/DashboardLayout";
+import Dashboard from "../pages/Dashboard/Dashbord";
 
 export const router = createBrowserRouter([
   {
-    path: '/',
+    path: "/",
     element: <MainLayout />,
     errorElement: <ErrorPage />,
     children: [
@@ -20,36 +19,101 @@ export const router = createBrowserRouter([
         element: <Home />,
       },
       {
-        path: '/services',
-        element: <Services/>
+        path: "/services",
+        element: <Services />,
       },
       {
-        path: '/about',
-        element: <About/>
+        path: "/about",
+        element: <About />,
       },
       {
-        path: '/contact',
-        element: <Contact/>
+        path: "/contact",
+        element: <Contact />,
       },
       {
-        path: '/coverage',
-        element: <Contact/>
+        path: "/coverage",
+        element: <Contact />,
       },
     ],
   },
-  { path: '/login', element: <Home /> },
-  { path: '/signup', element: <Home /> },
+  { path: "/login", element: <Home /> },
+  { path: "/signup", element: <Home /> },
   {
-    path: '/dashboard',
-    element: (
-        <DashboardLayout />
-    ),
+    path: "/dashboard",
+    element: <DashboardLayout />,
     children: [
+      // user dashboard links
       {
         index: true,
-        element: <Dashboard/>
+        element: <Dashboard />,
+      },
+      {
+        path: "/dashboard/profile",
+        element: <Dashboard />,
+      },
+      {
+        path: "/dashboard/bookings",
+        element: <Dashboard />,
+      },
+      {
+        path: "/dashboard/payments",
+        element: <Dashboard />,
+      },
+      // admin dashboard links
+      {
+        path: "/dashboard/admin-dashboard",
+        element: <Dashboard />,
+      },
+      {
+        path: "/dashboard/profile",
+        element: <Dashboard />,
+      },
+      {
+        path: "/dashboard/admin-decorators",
+        element: <Dashboard />,
+      },
+      {
+        path: "/dashboard/admin-services",
+        element: <Dashboard />,
+      },
+      {
+        path: "/dashboard/admin-bookings",
+        element: <Dashboard />,
+      },
+      {
+        path: "/dashboard/admin-assign",
+        element: <Dashboard />,
+      },
+      {
+        path: "/dashboard/admin-revenue",
+        element: <Dashboard />,
+      },
+      {
+        path: "/dashboard/admin-analytics",
+        element: <Dashboard />,
+      },
+      // decorator dashboard links
+      {
+        path: "/dashboard/decorator-dashboard",
+        element: <Dashboard />,
+      },
+      {
+        path: "/dashboard/decorator-projects",
+        element: <Dashboard />,
+      },
+      {
+        path: "/dashboard/decorator-schedule",
+        element: <Dashboard />,
+      },
+      {
+        path: "/dashboard/decorator-status",
+        element: <Dashboard />,
+      },
+      {
+        path: "/dashboard/decorator-earnings",
+        element: <Dashboard />,
       },
 
     ],
   },
-])
+]);

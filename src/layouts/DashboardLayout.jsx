@@ -4,9 +4,9 @@ import Navbar from '../components/Shared/Navbar/Navbar'
 
 const DashboardLayout = () => {
   return (
-    <div className=''>
+    <div>
       <Navbar></Navbar>
-      <div>
+      <div className='max-w-[1600px] mx-auto'>
         <div>
           {/* Outlet for dynamic contents */}
 
