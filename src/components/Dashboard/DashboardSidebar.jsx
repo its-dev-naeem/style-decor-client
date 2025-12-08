@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { NavLink } from "react-router";
 import {
   FaUser,
@@ -19,10 +19,29 @@ import {
   FaHome,
   FaCog,
   FaTachometerAlt,
+  FaPlus,
 } from "react-icons/fa";
+import { FaList } from "react-icons/fa6";
 
 const DashboardSidebar = ({ userRole = "admin" }) => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+  const [isMobile, setIsMobile] = useState(false);
+
+  // Check if mobile
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+      if (window.innerWidth < 768) {
+        setIsSidebarOpen(false);
+      } else {
+        setIsSidebarOpen(true);
+      }
+    };
+
+    checkMobile();
+    window.addEventListener("resize", checkMobile);
+    return () => window.removeEventListener("resize", checkMobile);
+  }, []);
 
   // Common links for all roles (always at bottom)
   const commonLinks = [
@@ -82,6 +101,12 @@ const DashboardSidebar = ({ userRole = "admin" }) => {
       name: "Manage Decorators",
       icon: <FaUsers />,
       to: "/dashboard/admin-decorators",
+    },
+    {
+      id: "addServices",
+      name: "Add Services",
+      icon: <FaPlus />,
+      to: "/dashboard/admin-add-Services",
     },
     {
       id: "services",
@@ -186,20 +211,26 @@ const DashboardSidebar = ({ userRole = "admin" }) => {
       {/* Mobile Toggle Button */}
       <button
         onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-        className="lg:hidden absolute top-17 right-2 z-50 btn btn-circle btn-sm btn-ghost bg-base-100 shadow"
+        className="lg:hidden absolute top-19 left-2 z-50"
       >
-        {isSidebarOpen ? <FaBars /> : <FaTimes />}
+        {isSidebarOpen ? <FaTimes /> : <FaList />}
       </button>
 
       {/* Overlay for mobile */}
+      {isSidebarOpen && isMobile && (
+        <div
+          className=" absolute inset-0  bg-opacity-50 z-40 lg:hidden"
+          onClick={() => setIsSidebarOpen(false)}
+        />
+      )}
 
       {/* Sidebar */}
       <aside
         className={`
         ${
-          isSidebarOpen ? " hidden lg:block " : " block absolute top-15 right-0"
+          isSidebarOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"
         }
-        bg-base-100 shadow-xl z-1 w-64 h-screen
+        absolute lg:static top-17 left-0 h-full w-64 bg-base-100 shadow-xl z-40
         transition-transform duration-300 ease-in-out
         border-r border-base-300
       `}
@@ -236,7 +267,7 @@ const DashboardSidebar = ({ userRole = "admin" }) => {
                           : "hover:bg-base-200"
                       }
                     `}
-                    onClick={() => setIsSidebarOpen(false)}
+                    onClick={() => isMobile && setIsSidebarOpen(false)}
                   >
                     <span className="text-lg">{link.icon}</span>
                     <span>{link.name}</span>
@@ -258,7 +289,7 @@ const DashboardSidebar = ({ userRole = "admin" }) => {
                       ${link.color}
                       ${isActive ? "bg-base-200" : "hover:bg-base-200"}
                     `}
-                    onClick={() => setIsSidebarOpen(false)}
+                    onClick={() => isMobile && setIsSidebarOpen(false)}
                   >
                     <span className="text-lg">{link.icon}</span>
                     <span>{link.name}</span>
@@ -274,3 +305,21 @@ const DashboardSidebar = ({ userRole = "admin" }) => {
 };
 
 export default DashboardSidebar;
+
+// User specific links
+
+// Admin specific links
+
+// Decorator specific links
+
+// Get current role links
+// const getRoleLinks = () => {
+//   switch (userRole) {
+//     case "admin":
+//       return adminLinks;
+//     case "decorator":
+//       return decoratorLinks;
+//     default:
+//       return userLinks;
+//   }
+// };

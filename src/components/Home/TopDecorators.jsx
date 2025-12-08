@@ -123,11 +123,6 @@ const TopDecorators = () => {
     },
   ];
 
-  const allSpecialties = [
-    "all",
-    ...new Set(decoratorsData.flatMap((decorator) => decorator.specialties)),
-  ];
-
   const filteredDecorators =
     selectedSpecialty === "all"
       ? decoratorsData

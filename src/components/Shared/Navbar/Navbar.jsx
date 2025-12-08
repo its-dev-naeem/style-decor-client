@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { NavLink } from 'react-router';
+import { Link, NavLink } from 'react-router';
 
 const Navbar = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(true);
@@ -68,7 +68,7 @@ const Navbar = () => {
           {/* Login/Profile Section */}
           <div className="flex-none">
             {!isLoggedIn ? (
-              <button className="btn btn-ghost">Login</button>
+              <Link to='/signup' className="btn btn-ghost">Login</Link>
             ) : (
               <div className="dropdown dropdown-end">
                 <label tabIndex={0} className="btn btn-ghost btn-circle avatar">

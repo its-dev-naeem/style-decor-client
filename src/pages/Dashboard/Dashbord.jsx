@@ -3,8 +3,6 @@ import DashboardSidebar from "../../components/Dashboard/DashboardSidebar";
 
 const Dashbord = () => {
   return (
-    <div>
-        <h1 className=" lg:hidden border-b text-center h-10 justify-center flex items-center"> Dashboard </h1>
       <div className=" mx-auto flex">
         <div>
           Lorem ipsum dolor sit amet consectetur adipisicing elit. Praesentium,
@@ -31,11 +29,7 @@ const Dashbord = () => {
           consequuntur voluptates possimus, hic reiciendis repellat amet? Amet,
           ullam!
         </div>
-        <aside>
-          <DashboardSidebar></DashboardSidebar>
-        </aside>
       </div>
-    </div>
   );
 };
 

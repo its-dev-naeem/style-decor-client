@@ -7,6 +7,9 @@ import About from "../pages/About/About";
 import Contact from "../pages/Contact/Contact";
 import DashboardLayout from "../layouts/DashboardLayout";
 import Dashboard from "../pages/Dashboard/Dashbord";
+import Signup from "../components/Aurhentication/Signup";
+import Login from "../components/Aurhentication/Login";
+import Forgot from "../components/Aurhentication/Forgot";
 
 export const router = createBrowserRouter([
   {
@@ -34,10 +37,17 @@ export const router = createBrowserRouter([
         path: "/coverage",
         element: <Contact />,
       },
+      { path: "/login", 
+        element: <Login /> 
+      },
+      { path: "/signup", 
+        element: <Signup /> 
+      },
+      { path: "/forgot-password", 
+        element: <Forgot /> 
+      },
     ],
   },
-  { path: "/login", element: <Home /> },
-  { path: "/signup", element: <Home /> },
   {
     path: "/dashboard",
     element: <DashboardLayout />,
@@ -73,6 +83,10 @@ export const router = createBrowserRouter([
         element: <Dashboard />,
       },
       {
+        path: "/dashboard/admin-add-Services",
+        element: <Dashboard />,
+      },
+      {
         path: "/dashboard/admin-services",
         element: <Dashboard />,
       },
@@ -95,7 +109,7 @@ export const router = createBrowserRouter([
       // decorator dashboard links
       {
         path: "/dashboard/decorator-dashboard",
-        element: <Dashboard />,
+        element: <About />,
       },
       {
         path: "/dashboard/decorator-projects",
@@ -113,7 +127,6 @@ export const router = createBrowserRouter([
         path: "/dashboard/decorator-earnings",
         element: <Dashboard />,
       },
-
     ],
   },
 ]);
