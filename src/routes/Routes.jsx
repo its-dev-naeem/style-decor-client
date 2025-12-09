@@ -12,6 +12,9 @@ import Login from "../components/Aurhentication/Login";
 import Forgot from "../components/Aurhentication/Forgot";
 import ProfilePage from "../components/ProfilePage";
 import AddService from "../components/Admin/AddService";
+import ManageDecorators from "../components/Admin/ManageDecorators";
+import ManageBookings from "../components/Admin/ManageBookings";
+import AssignDecorators from "../components/Admin/AssignDecorators";
 
 export const router = createBrowserRouter([
   {
@@ -82,7 +85,7 @@ export const router = createBrowserRouter([
       },
       {
         path: "/dashboard/admin-decorators",
-        element: <Dashboard />,
+        element: <ManageDecorators />,
       },
       {
         path: "/dashboard/admin-add-Services",
@@ -94,11 +97,11 @@ export const router = createBrowserRouter([
       },
       {
         path: "/dashboard/admin-bookings",
-        element: <Dashboard />,
+        element: <ManageBookings />,
       },
       {
         path: "/dashboard/admin-assign",
-        element: <Dashboard />,
+        element: <AssignDecorators />,
       },
       {
         path: "/dashboard/admin-revenue",

@@ -10,7 +10,7 @@ import {
   FaUpload,
   FaTimes,
   FaCheckCircle,
-  FaSpinner
+  FaSpinner,
 } from "react-icons/fa";
 
 const AddService = () => {
@@ -19,7 +19,7 @@ const AddService = () => {
     handleSubmit,
     reset,
     watch,
-    formState: { errors, isSubmitting }
+    formState: { errors, isSubmitting },
   } = useForm();
 
   const [imagePreview, setImagePreview] = useState(null);
@@ -29,12 +29,36 @@ const AddService = () => {
 
   // Service categories
   const serviceCategories = [
-    { value: "home-decoration", label: "🏠 Home Decoration", color: "bg-blue-100 text-blue-800" },
-    { value: "interior-design", label: "🎨 Interior Design", color: "bg-purple-100 text-purple-800" },
-    { value: "event-decoration", label: "🎉 Event Decoration", color: "bg-pink-100 text-pink-800" },
-    { value: "luxury-makeover", label: "✨ Luxury Makeover", color: "bg-yellow-100 text-yellow-800" },
-    { value: "office-design", label: "💼 Office Design", color: "bg-green-100 text-green-800" },
-    { value: "landscaping", label: "🌿 Landscaping", color: "bg-emerald-100 text-emerald-800" },
+    {
+      value: "home-decoration",
+      label: "🏠 Home Decoration",
+      color: "bg-blue-100 text-blue-800",
+    },
+    {
+      value: "interior-design",
+      label: "🎨 Interior Design",
+      color: "bg-purple-100 text-purple-800",
+    },
+    {
+      value: "event-decoration",
+      label: "🎉 Event Decoration",
+      color: "bg-pink-100 text-pink-800",
+    },
+    {
+      value: "luxury-makeover",
+      label: "✨ Luxury Makeover",
+      color: "bg-yellow-100 text-yellow-800",
+    },
+    {
+      value: "office-design",
+      label: "💼 Office Design",
+      color: "bg-green-100 text-green-800",
+    },
+    {
+      value: "landscaping",
+      label: "🌿 Landscaping",
+      color: "bg-emerald-100 text-emerald-800",
+    },
   ];
 
   // Handle image upload
@@ -43,14 +67,14 @@ const AddService = () => {
     if (!file) return;
 
     // Validate file type
-    if (!file.type.match('image.*')) {
-      alert('Please select an image file (JPEG, PNG, etc.)');
+    if (!file.type.match("image.*")) {
+      alert("Please select an image file (JPEG, PNG, etc.)");
       return;
     }
 
     // Validate file size (max 5MB)
     if (file.size > 5 * 1024 * 1024) {
-      alert('Image size should be less than 5MB');
+      alert("Image size should be less than 5MB");
       return;
     }
 
@@ -59,19 +83,19 @@ const AddService = () => {
     setUploadProgress(0);
 
     const interval = setInterval(() => {
-      setUploadProgress(prev => {
+      setUploadProgress((prev) => {
         if (prev >= 100) {
           clearInterval(interval);
           setIsUploading(false);
-          
+
           // Create preview
           const reader = new FileReader();
           reader.onloadend = () => {
             setImagePreview(reader.result);
-            alert('Image uploaded successfully!');
+            alert("Image uploaded successfully!");
           };
           reader.readAsDataURL(file);
-          
+
           return 100;
         }
         return prev + 20;
@@ -83,12 +107,12 @@ const AddService = () => {
   const onSubmit = async (data) => {
     try {
       // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1500));
-      
+      await new Promise((resolve) => setTimeout(resolve, 1500));
+
       console.log("Service Data Submitted:", {
         ...data,
         image: imagePreview ? "Uploaded Image" : data.image,
-        timestamp: new Date().toISOString()
+        timestamp: new Date().toISOString(),
       });
 
       // Show success alert
@@ -104,14 +128,14 @@ const AddService = () => {
       reset();
       setImagePreview(null);
       setUploadProgress(0);
-      
+
       // Reset file input
       if (fileInputRef.current) {
-        fileInputRef.current.value = '';
+        fileInputRef.current.value = "";
       }
     } catch (error) {
       console.log(error);
-      alert('Failed to add service. Please try again.');
+      alert("Failed to add service. Please try again.");
     }
   };
 
@@ -119,7 +143,7 @@ const AddService = () => {
   const removeImagePreview = () => {
     setImagePreview(null);
     if (fileInputRef.current) {
-      fileInputRef.current.value = '';
+      fileInputRef.current.value = "";
     }
   };
 
@@ -131,7 +155,6 @@ const AddService = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-primary/5 py-8 px-4">
-      
       <div className="max-w-6xl mx-auto">
         {/* Header */}
         <div className="text-center mb-10">
@@ -140,7 +163,8 @@ const AddService = () => {
             Add New Service
           </h1>
           <p className="text-gray-600 text-lg max-w-2xl mx-auto">
-            Create and publish your decoration service to attract clients worldwide
+            Create and publish your decoration service to attract clients
+            worldwide
           </p>
         </div>
 
@@ -150,7 +174,6 @@ const AddService = () => {
             <div className="card bg-white shadow-2xl rounded-2xl overflow-hidden border border-gray-100">
               <div className="card-body p-6 md:p-8">
                 <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-                  
                   {/* Service Name */}
                   <div className="form-control">
                     <label className="label">
@@ -161,14 +184,16 @@ const AddService = () => {
                     </label>
                     <input
                       type="text"
-                      className={`input input-bordered w-full focus:ring-2 focus:ring-primary focus:border-transparent transition-all ${errors.serviceName ? 'input-error' : ''}`}
+                      className={`input input-bordered w-full focus:ring-2 focus:ring-primary focus:border-transparent transition-all ${
+                        errors.serviceName ? "input-error" : ""
+                      }`}
                       placeholder="Complete Home Makeover Package"
-                      {...register("serviceName", { 
+                      {...register("serviceName", {
                         required: "Service name is required",
                         minLength: {
                           value: 5,
-                          message: "Name must be at least 5 characters"
-                        }
+                          message: "Name must be at least 5 characters",
+                        },
                       })}
                     />
                     {errors.serviceName && (
@@ -188,11 +213,15 @@ const AddService = () => {
                       </span>
                     </label>
                     <select
-                      className={`select select-bordered w-full focus:ring-2 focus:ring-primary focus:border-transparent ${errors.serviceCategory ? 'select-error' : ''}`}
-                      {...register("serviceCategory", { required: "Please select a category" })}
+                      className={`select select-bordered w-full focus:ring-2 focus:ring-primary focus:border-transparent ${
+                        errors.serviceCategory ? "select-error" : ""
+                      }`}
+                      {...register("serviceCategory", {
+                        required: "Please select a category",
+                      })}
                     >
                       <option value="">Select Category</option>
-                      {serviceCategories.map(cat => (
+                      {serviceCategories.map((cat) => (
                         <option key={cat.value} value={cat.value}>
                           {cat.label}
                         </option>
@@ -215,18 +244,20 @@ const AddService = () => {
                       </span>
                     </label>
                     <textarea
-                      className={`textarea textarea-bordered w-full focus:ring-2 focus:ring-primary focus:border-transparent h-32 ${errors.description ? 'textarea-error' : ''}`}
+                      className={`textarea textarea-bordered w-full focus:ring-2 focus:ring-primary focus:border-transparent h-32 ${
+                        errors.description ? "textarea-error" : ""
+                      }`}
                       placeholder="Describe your service in detail. Include what clients can expect, special features, and any requirements."
-                      {...register("description", { 
+                      {...register("description", {
                         required: "Description is required",
                         minLength: {
                           value: 50,
-                          message: "Description must be at least 50 characters"
+                          message: "Description must be at least 50 characters",
                         },
                         maxLength: {
                           value: 1000,
-                          message: "Description cannot exceed 1000 characters"
-                        }
+                          message: "Description cannot exceed 1000 characters",
+                        },
                       })}
                     />
                     <div className="flex justify-between mt-2">
@@ -249,22 +280,26 @@ const AddService = () => {
                       <label className="label">
                         <span className="label-text font-bold text-gray-700 flex items-center gap-2">
                           <FaDollarSign />
-                          Price
+                          Price per unit
                         </span>
                       </label>
                       <div className="relative">
-                        <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500">$</span>
+                        <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500">
+                          $
+                        </span>
                         <input
                           type="number"
-                          className={`input input-bordered w-full pl-8 focus:ring-2 focus:ring-primary focus:border-transparent ${errors.price ? 'input-error' : ''}`}
-                          placeholder="2499.99"
+                          className={`input input-bordered w-full pl-8 focus:ring-2 focus:ring-primary focus:border-transparent ${
+                            errors.price ? "input-error" : ""
+                          }`}
+                          placeholder="0000"
                           step="0.01"
-                          {...register("price", { 
+                          {...register("price", {
                             required: "Price is required",
                             min: {
                               value: 1,
-                              message: "Price must be at least $1"
-                            }
+                              message: "Price must be at least $1",
+                            },
                           })}
                         />
                       </div>
@@ -278,27 +313,19 @@ const AddService = () => {
 
                     <div className="form-control">
                       <label className="label">
-                        <span className="label-text font-bold text-gray-700">Quantity Available</span>
+                        <span className="label-text font-bold text-gray-700">
+                          Square Unit
+                        </span>
                       </label>
-                      <input
-                        type="number"
-                        className={`input input-bordered w-full focus:ring-2 focus:ring-primary focus:border-transparent ${errors.quantity ? 'input-error' : ''}`}
-                        placeholder="10"
-                        min="1"
-                        {...register("quantity", { 
-                          required: "Quantity is required",
-                          min: {
-                            value: 1,
-                            message: "Minimum quantity is 1"
-                          }
-                        })}
-                      />
-                      {errors.quantity && (
-                        <div className="text-error text-sm mt-2 flex items-center gap-1">
-                          <FaTimes className="text-xs" />
-                          {errors.quantity.message}
-                        </div>
-                      )}
+                      <select
+                        className="select w-full"
+                        defaultValue="Inch"
+                        {...register("unit", { required: true })}
+                      >
+                        <option value="Inch">Inch</option>
+                        <option value="Meter">Meter</option>
+                        <option value="Feet">Feet</option>
+                      </select>
                     </div>
                   </div>
 
@@ -310,14 +337,14 @@ const AddService = () => {
                         Service Image
                       </span>
                     </label>
-                    
+
                     {/* Image Preview */}
                     {imagePreview && (
                       <div className="mb-4 relative">
                         <div className="relative w-full h-48 rounded-lg overflow-hidden border-2 border-dashed border-primary/30">
-                          <img 
-                            src={imagePreview} 
-                            alt="Preview" 
+                          <img
+                            src={imagePreview}
+                            alt="Preview"
                             className="w-full h-full object-cover"
                           />
                           <button
@@ -336,32 +363,41 @@ const AddService = () => {
                       <div className="mb-4">
                         <div className="flex justify-between text-sm mb-1">
                           <span className="text-gray-600">Uploading...</span>
-                          <span className="font-semibold">{uploadProgress}%</span>
+                          <span className="font-semibold">
+                            {uploadProgress}%
+                          </span>
                         </div>
-                        <progress 
-                          className="progress progress-primary w-full" 
-                          value={uploadProgress} 
+                        <progress
+                          className="progress progress-primary w-full"
+                          value={uploadProgress}
                           max="100"
                         />
                       </div>
                     )}
 
                     {/* File Upload */}
-                    <label className={`flex flex-col items-center justify-center w-full h-32 border-2 border-dashed rounded-lg cursor-pointer transition-all hover:border-primary hover:bg-primary/5 ${imagePreview ? 'hidden' : ''} ${errors.image ? 'border-error' : 'border-gray-300'}`}>
+                    <label
+                      className={`flex flex-col items-center justify-center w-full h-32 border-2 border-dashed rounded-lg cursor-pointer transition-all hover:border-primary hover:bg-primary/5 ${
+                        imagePreview ? "hidden" : ""
+                      } ${errors.image ? "border-error" : "border-gray-300"}`}
+                    >
                       <div className="flex flex-col items-center justify-center pt-5 pb-6">
                         <FaUpload className="w-10 h-10 mb-3 text-gray-400" />
                         <p className="mb-2 text-sm text-gray-500">
-                          <span className="font-semibold">Click to upload</span> or drag and drop
+                          <span className="font-semibold">Click to upload</span>{" "}
+                          or drag and drop
                         </p>
-                        <p className="text-xs text-gray-500">PNG, JPG, WEBP (MAX. 5MB)</p>
+                        <p className="text-xs text-gray-500">
+                          PNG, JPG, WEBP (MAX. 5MB)
+                        </p>
                       </div>
                       <input
                         type="file"
                         className="hidden"
                         accept="image/*"
                         ref={fileInputRef}
-                        {...register("image", { 
-                          required: !imagePreview && "Please upload an image"
+                        {...register("image", {
+                          required: !imagePreview && "Please upload an image",
                         })}
                         onChange={handleImageUpload}
                       />
@@ -379,7 +415,9 @@ const AddService = () => {
                     <button
                       type="submit"
                       disabled={isSubmitting || isUploading}
-                      className={`btn btn-primary btn-lg w-full transition-all hover:scale-[1.02] ${isSubmitting ? 'loading' : ''}`}
+                      className={`btn btn-primary btn-lg w-full transition-all hover:scale-[1.02] ${
+                        isSubmitting ? "loading" : ""
+                      }`}
                     >
                       {isSubmitting ? (
                         <>
@@ -412,9 +450,9 @@ const AddService = () => {
                   {/* Image Preview */}
                   <div className="h-48 bg-gradient-to-r from-primary/20 to-secondary/20 flex items-center justify-center overflow-hidden">
                     {imagePreview ? (
-                      <img 
-                        src={imagePreview} 
-                        alt="Service Preview" 
+                      <img
+                        src={imagePreview}
+                        alt="Service Preview"
                         className="w-full h-full object-cover"
                       />
                     ) : (
@@ -428,15 +466,24 @@ const AddService = () => {
                   {/* Preview Content */}
                   <div className="p-6">
                     {serviceName ? (
-                      <h4 className="text-xl font-bold text-gray-900 mb-2">{serviceName}</h4>
+                      <h4 className="text-xl font-bold text-gray-900 mb-2">
+                        {serviceName}
+                      </h4>
                     ) : (
                       <div className="h-6 bg-gray-200 rounded animate-pulse mb-2"></div>
                     )}
 
                     {category && (
                       <div className="mb-4">
-                        <span className={`px-3 py-1 rounded-full text-xs font-semibold ${serviceCategories.find(c => c.value === category)?.color || 'bg-gray-100 text-gray-800'}`}>
-                          {serviceCategories.find(c => c.value === category)?.label.split(' ')[1] || 'Category'}
+                        <span
+                          className={`px-3 py-1 rounded-full text-xs font-semibold ${
+                            serviceCategories.find((c) => c.value === category)
+                              ?.color || "bg-gray-100 text-gray-800"
+                          }`}
+                        >
+                          {serviceCategories
+                            .find((c) => c.value === category)
+                            ?.label.split(" ")[1] || "Category"}
                         </span>
                       </div>
                     )}
@@ -456,8 +503,12 @@ const AddService = () => {
                     <div className="flex justify-between items-center pt-4 border-t border-gray-200">
                       {price ? (
                         <div>
-                          <span className="text-sm text-gray-500">Starting from</span>
-                          <p className="text-2xl font-bold text-primary">${parseFloat(price).toLocaleString()}</p>
+                          <span className="text-sm text-gray-500">
+                            Starting from
+                          </span>
+                          <p className="text-2xl font-bold text-primary">
+                            ${parseFloat(price).toLocaleString()}
+                          </p>
                         </div>
                       ) : (
                         <div>
@@ -467,9 +518,13 @@ const AddService = () => {
                       )}
 
                       <div className="text-right">
-                        <span className="text-sm text-gray-500 block">Availability</span>
-                        {watch("quantity") ? (
-                          <p className="font-semibold">{watch("quantity")} slots left</p>
+                        <span className="text-sm text-gray-500 block">
+                          Square Unit
+                        </span>
+                        {watch("unit") ? (
+                          <p className="font-semibold">
+                            {watch("unit")} per square
+                          </p>
                         ) : (
                           <div className="h-6 bg-gray-200 rounded animate-pulse w-16 inline-block"></div>
                         )}
