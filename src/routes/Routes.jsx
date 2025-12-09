@@ -10,6 +10,8 @@ import Dashboard from "../pages/Dashboard/Dashbord";
 import Signup from "../components/Aurhentication/Signup";
 import Login from "../components/Aurhentication/Login";
 import Forgot from "../components/Aurhentication/Forgot";
+import ProfilePage from "../components/ProfilePage";
+import AddService from "../components/Admin/AddService";
 
 export const router = createBrowserRouter([
   {
@@ -59,7 +61,7 @@ export const router = createBrowserRouter([
       },
       {
         path: "/dashboard/profile",
-        element: <Dashboard />,
+        element: <ProfilePage />,
       },
       {
         path: "/dashboard/bookings",
@@ -76,7 +78,7 @@ export const router = createBrowserRouter([
       },
       {
         path: "/dashboard/profile",
-        element: <Dashboard />,
+        element: <ProfilePage />,
       },
       {
         path: "/dashboard/admin-decorators",
@@ -84,7 +86,7 @@ export const router = createBrowserRouter([
       },
       {
         path: "/dashboard/admin-add-Services",
-        element: <Dashboard />,
+        element: <AddService />,
       },
       {
         path: "/dashboard/admin-services",
@@ -107,6 +109,10 @@ export const router = createBrowserRouter([
         element: <Dashboard />,
       },
       // decorator dashboard links
+      {
+        path: "/dashboard/profile",
+        element: <ProfilePage />,
+      },
       {
         path: "/dashboard/decorator-dashboard",
         element: <About />,
