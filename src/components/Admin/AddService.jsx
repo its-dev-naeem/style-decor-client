@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useContext } from "react";
 import { useForm } from "react-hook-form";
 import {
   FaPlus,
@@ -12,17 +12,21 @@ import {
   FaCheckCircle,
   FaSpinner,
 } from "react-icons/fa";
+import { AuthContext } from "../../providers/AuthContext";
+import { imageUpload } from "../../utils";
+import axios from "axios";
 
 const AddService = () => {
+  const {user} = useContext(AuthContext)
   const {
     register,
     handleSubmit,
-    reset,
     watch,
     formState: { errors, isSubmitting },
   } = useForm();
 
   const [imagePreview, setImagePreview] = useState(null);
+  const [photoFile, setPhotoFile] = useState(null);
   const [uploadProgress, setUploadProgress] = useState(0);
   const [isUploading, setIsUploading] = useState(false);
   const fileInputRef = useRef(null);
@@ -31,32 +35,32 @@ const AddService = () => {
   const serviceCategories = [
     {
       value: "home-decoration",
-      label: "🏠 Home Decoration",
+      label: "Home Decoration",
       color: "bg-blue-100 text-blue-800",
     },
     {
       value: "interior-design",
-      label: "🎨 Interior Design",
+      label: "Interior Design",
       color: "bg-purple-100 text-purple-800",
     },
     {
       value: "event-decoration",
-      label: "🎉 Event Decoration",
+      label: "Event Decoration",
       color: "bg-pink-100 text-pink-800",
     },
     {
       value: "luxury-makeover",
-      label: "✨ Luxury Makeover",
+      label: "Luxury Makeover",
       color: "bg-yellow-100 text-yellow-800",
     },
     {
       value: "office-design",
-      label: "💼 Office Design",
+      label: "Office Design",
       color: "bg-green-100 text-green-800",
     },
     {
-      value: "landscaping",
-      label: "🌿 Landscaping",
+      value: "Others",
+      label: "Others",
       color: "bg-emerald-100 text-emerald-800",
     },
   ];
@@ -77,7 +81,7 @@ const AddService = () => {
       alert("Image size should be less than 5MB");
       return;
     }
-
+    setPhotoFile(file)
     // Simulate upload progress
     setIsUploading(true);
     setUploadProgress(0);
@@ -108,12 +112,33 @@ const AddService = () => {
     try {
       // Simulate API call
       await new Promise((resolve) => setTimeout(resolve, 1500));
-
-      console.log("Service Data Submitted:", {
+      const ServicImage =  await imageUpload(photoFile);
+      delete data.image
+      const finalData = {
         ...data,
-        image: imagePreview ? "Uploaded Image" : data.image,
+        ServicImage,
         timestamp: new Date().toISOString(),
-      });
+        providerName: user.displayName,
+        providerEmail: user.email,
+        providerPhoto: user.photoURL,
+        TotalRating: 0,
+        AvgRating: 0,
+        serviceSales : 0 ,
+        reviews:[
+          {
+            id:1,
+            CommenterPhoto: "none" ,
+            CommenterEmail: "none" ,
+            CommenterName: "none" ,
+            comment: 'Nothing',
+            rating: 5,
+          },
+        ]
+      };
+      console.log(finalData);
+      const result = await axios.post(`http://localhost:3000/services`, finalData)
+      console.log(result);
+      // console.log(user);
 
       // Show success alert
       alert(
@@ -125,14 +150,14 @@ const AddService = () => {
       );
 
       // Reset form
-      reset();
-      setImagePreview(null);
-      setUploadProgress(0);
+      // reset();
+      // setImagePreview(null);
+      // setUploadProgress(0);
 
       // Reset file input
-      if (fileInputRef.current) {
-        fileInputRef.current.value = "";
-      }
+      // if (fileInputRef.current) {
+      //   fileInputRef.current.value = "";
+      // }
     } catch (error) {
       console.log(error);
       alert("Failed to add service. Please try again.");

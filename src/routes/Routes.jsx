@@ -15,6 +15,7 @@ import AddService from "../components/Admin/AddService";
 import ManageDecorators from "../components/Admin/ManageDecorators";
 import ManageBookings from "../components/Admin/ManageBookings";
 import AssignDecorators from "../components/Admin/AssignDecorators";
+import ServiceDetails from "../components/Home/ServiceDetails";
 
 export const router = createBrowserRouter([
   {
@@ -29,6 +30,10 @@ export const router = createBrowserRouter([
       {
         path: "/services",
         element: <Services />,
+      },
+      {
+        path: "/services/:id",
+        element: <ServiceDetails />,
       },
       {
         path: "/about",
