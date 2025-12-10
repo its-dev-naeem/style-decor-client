@@ -16,6 +16,7 @@ import ManageDecorators from "../components/Admin/ManageDecorators";
 import ManageBookings from "../components/Admin/ManageBookings";
 import AssignDecorators from "../components/Admin/AssignDecorators";
 import ServiceDetails from "../components/Home/ServiceDetails";
+import UserBookedData from "../components/User/UserBookedData ";
 
 export const router = createBrowserRouter([
   {
@@ -73,7 +74,7 @@ export const router = createBrowserRouter([
       },
       {
         path: "/dashboard/bookings",
-        element: <Dashboard />,
+        element: <UserBookedData />,
       },
       {
         path: "/dashboard/payments",

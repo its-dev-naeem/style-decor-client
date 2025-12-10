@@ -23,7 +23,7 @@ import {
 } from "react-icons/fa";
 import { FaList } from "react-icons/fa6";
 
-const DashboardSidebar = ({ userRole = "admin" }) => {
+const DashboardSidebar = ({ userRole = "user" }) => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const [isMobile, setIsMobile] = useState(false);
 
@@ -230,7 +230,7 @@ const DashboardSidebar = ({ userRole = "admin" }) => {
         ${
           isSidebarOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"
         }
-        absolute lg:static top-17 left-0 h-full w-64 bg-base-100 shadow-xl z-40
+        absolute lg:static top-17 left-0 h-screen w-64 bg-base-100 shadow-xl z-40
         transition-transform duration-300 ease-in-out
         border-r border-base-300
       `}

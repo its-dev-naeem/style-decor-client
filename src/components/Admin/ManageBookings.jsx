@@ -1,325 +1,296 @@
-import React, { useState } from 'react';
-import { FaEdit, FaCheck, FaTimes, FaFilter, FaSearch } from 'react-icons/fa';
+import axios from "axios";
+import { useEffect, useState } from "react";
+import {
+  FaCalendarAlt,
+  FaUser,
+  FaImage,
+  FaTag,
+  FaMoneyBill,
+  FaInfoCircle,
+  FaTrash,
+  FaSearch
+} from "react-icons/fa";
+import { MdEmail, MdCategory } from "react-icons/md";
 
 const ManageBookings = () => {
-  // Initial bookings data
-  const initialBookings = [
-    {
-      id: 1,
-      userName: 'John Doe',
-      userEmail: 'john@example.com',
-      providerName: 'Alex Johnson',
-      providerEmail: 'alex@provider.com',
-      service: 'Home Cleaning',
-      category: 'Cleaning',
-      status: 'pending',
-      price: '$120',
-      date: '2024-01-15',
-      serviceImage: 'https://images.unsplash.com/photo-1581578731548-c64695cc6952?w=400'
-    },
-    {
-      id: 2,
-      userName: 'Sarah Smith',
-      userEmail: 'sarah@example.com',
-      providerName: 'Mike Wilson',
-      providerEmail: 'mike@provider.com',
-      service: 'Plumbing Repair',
-      category: 'Repair',
-      status: 'processing',
-      price: '$200',
-      date: '2024-01-14',
-      serviceImage: 'https://images.unsplash.com/photo-1558618047-3c8c76ca7d13?w-400'
-    },
-    {
-      id: 3,
-      userName: 'Robert Brown',
-      userEmail: 'robert@example.com',
-      providerName: 'Emma Davis',
-      providerEmail: 'emma@provider.com',
-      service: 'Electrical Work',
-      category: 'Electrical',
-      status: 'completed',
-      price: '$180',
-      date: '2024-01-13',
-      serviceImage: 'https://images.unsplash.com/photo-1621905252507-b35492cc74b4?w=400'
-    },
-    {
-      id: 4,
-      userName: 'Lisa Wang',
-      userEmail: 'lisa@example.com',
-      providerName: 'Tom Lee',
-      providerEmail: 'tom@provider.com',
-      service: 'Painting Service',
-      category: 'Painting',
-      status: 'pending',
-      price: '$350',
-      date: '2024-01-12',
-      serviceImage: 'https://images.unsplash.com/photo-1589939705384-5185137a7f0f?w=400'
-    },
-    {
-      id: 5,
-      userName: 'David Kim',
-      userEmail: 'david@example.com',
-      providerName: 'Sophia Chen',
-      providerEmail: 'sophia@provider.com',
-      service: 'Carpet Cleaning',
-      category: 'Cleaning',
-      status: 'processing',
-      price: '$90',
-      date: '2024-01-11',
-      serviceImage: 'https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=400'
+  const [bookings, setBookings] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  // NEW STATES
+  const [search, setSearch] = useState("");
+  const [category, setCategory] = useState("All");
+
+  useEffect(() => {
+    const fetchBookings = async () => {
+      try {
+        const response = await axios.get("http://localhost:3000/booking-data");
+        setBookings(response.data);
+      } catch (error) {
+        console.error("Error fetching bookings:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchBookings();
+  }, []);
+
+  const getStatusColor = (status) => {
+    switch (status) {
+      case "Paid":
+        return "badge-success";
+      case "Pending":
+        return "badge-warning";
+      case "Unpaid":
+        return "badge-error";
+      default:
+        return "badge-neutral";
     }
-  ];
+  };
 
-  // State management
-  const [bookings, setBookings] = useState(initialBookings);
-  const [editingId, setEditingId] = useState(null);
-  const [editStatus, setEditStatus] = useState('');
-  const [search, setSearch] = useState('');
-  const [filterCategory, setFilterCategory] = useState('all');
-  const [filterStatus, setFilterStatus] = useState('all');
+  // CANCEL BOOKING HANDLER
+  const handleCancel = async (id) => {
+    const confirmDelete = confirm("Are you sure you want to cancel this booking?");
+    if (!confirmDelete) return;
 
-  // Get unique categories
-  const categories = ['all', ...new Set(initialBookings.map(b => b.category))];
-  const statuses = ['all', 'pending', 'processing', 'completed'];
+    try {
+      await axios.delete(`http://localhost:3000/booking-data/${id}`);
+      setBookings(bookings.filter((b) => b._id !== id));
+    } catch (error) {
+      console.error("Error canceling booking:", error);
+    }
+  };
 
-  // Filter bookings
-  const filteredBookings = bookings.filter(booking => {
-    const matchesSearch = 
-      booking.userName.toLowerCase().includes(search.toLowerCase()) ||
-      booking.userEmail.toLowerCase().includes(search.toLowerCase()) ||
-      booking.service.toLowerCase().includes(search.toLowerCase());
-    
-    const matchesCategory = filterCategory === 'all' || booking.category === filterCategory;
-    const matchesStatus = filterStatus === 'all' || booking.status === filterStatus;
-    
-    return matchesSearch && matchesCategory && matchesStatus;
+  // SEARCH + FILTER LOGIC
+  const filteredBookings = bookings.filter((booking) => {
+    const searchMatch =
+      booking.user.name.toLowerCase().includes(search.toLowerCase()) ||
+      booking.user.email.toLowerCase().includes(search.toLowerCase());
+
+    const categoryMatch =
+      category === "All" || booking.service.caterory === category;
+
+    return searchMatch && categoryMatch;
   });
 
-  // Handle status edit
-  const startEdit = (id, currentStatus) => {
-    setEditingId(id);
-    setEditStatus(currentStatus);
-  };
+  // COLLECT UNIQUE CATEGORIES
+  const categories = ["All", ...new Set(bookings.map((b) => b.service.caterory))];
 
-  const saveEdit = (id) => {
-    setBookings(bookings.map(booking => 
-      booking.id === id ? { ...booking, status: editStatus } : booking
-    ));
-    setEditingId(null);
-  };
-
-  const cancelEdit = () => {
-    setEditingId(null);
-  };
-
-  // Get status color
-  const getStatusColor = (status) => {
-    switch(status) {
-      case 'pending': return 'bg-yellow-100 text-yellow-800';
-      case 'processing': return 'bg-blue-100 text-blue-800';
-      case 'completed': return 'bg-green-100 text-green-800';
-      default: return 'bg-gray-100 text-gray-800';
-    }
-  };
+  if (loading) {
+    return <div>Loading...</div>;
+  }
 
   return (
-    <div className="p-6 max-w-7xl mx-auto">
-      <h1 className="text-3xl font-bold mb-6 text-gray-800">Manage Bookings</h1>
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 p-4 md:p-8">
+      <div className="max-w-7xl mx-auto">
+        
+        {/* Header */}
+        <div className="mb-8">
+          <h1 className="text-3xl md:text-4xl font-bold text-gray-800 mb-2">
+            My Booked Services
+          </h1>
+          <p className="text-gray-600">
+            Total {filteredBookings.length} booking
+            {filteredBookings.length !== 1 ? "s" : ""} found
+          </p>
+        </div>
 
-      {/* Filters and Search */}
-      <div className="bg-white p-4 rounded-lg shadow mb-6">
-        <div className="flex flex-col md:flex-row gap-4 mb-4">
+        {/* Search + Filter Row */}
+        <div className="flex flex-col md:flex-row items-center gap-4 mb-6">
+
           {/* Search */}
-          <div className="flex-1">
-            <div className="relative">
-              <FaSearch className="absolute left-3 top-3 text-gray-400" />
-              <input
-                type="text"
-                placeholder="Search by name, email, or service..."
-                className="w-full pl-10 pr-4 py-2 border rounded-lg"
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-              />
-            </div>
+          <div className="w-full md:w-1/2 relative">
+            <FaSearch className="absolute left-3 top-3 text-gray-400" />
+            <input
+              type="text"
+              placeholder="Search by user name or email..."
+              className="input input-bordered w-full pl-10"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+            />
           </div>
 
           {/* Category Filter */}
-          <div className="flex gap-4">
-            <select
-              className="border rounded-lg px-3 py-2"
-              value={filterCategory}
-              onChange={(e) => setFilterCategory(e.target.value)}
-            >
-              {categories.map(cat => (
-                <option key={cat} value={cat}>
-                  {cat === 'all' ? 'All Categories' : cat}
-                </option>
-              ))}
-            </select>
+          <select
+            className="select select-bordered w-full md:w-1/4"
+            value={category}
+            onChange={(e) => setCategory(e.target.value)}
+          >
+            {categories.map((cat, index) => (
+              <option key={index}>{cat}</option>
+            ))}
+          </select>
+        </div>
 
-            {/* Status Filter */}
-            <select
-              className="border rounded-lg px-3 py-2"
-              value={filterStatus}
-              onChange={(e) => setFilterStatus(e.target.value)}
-            >
-              {statuses.map(status => (
-                <option key={status} value={status}>
-                  {status === 'all' ? 'All Status' : status.charAt(0).toUpperCase() + status.slice(1)}
-                </option>
-              ))}
-            </select>
+        {/* Table for Desktop */}
+        <div className="hidden lg:block">
+          <div className="card bg-base-100 shadow-xl overflow-hidden">
+            <div className="overflow-x-auto">
+              <table className="table">
+                <thead className="bg-base-200">
+                  <tr>
+                    <th className="text-lg font-semibold">Service</th>
+                    <th className="text-lg font-semibold">User</th>
+                    <th className="text-lg font-semibold">Details</th>
+                    <th className="text-lg font-semibold">Status</th>
+                    <th className="text-lg font-semibold">Action</th>
+                  </tr>
+                </thead>
+
+                <tbody>
+                  {filteredBookings.map((booking) => (
+                    <tr key={booking._id}>
+                      <td>
+                        <div className="flex items-center gap-4">
+                          <div className="avatar">
+                            <div className="w-16 h-16 rounded-lg">
+                              <img src={booking.service.image} />
+                            </div>
+                          </div>
+                          <div>
+                            <h3 className="font-bold text-lg">
+                              {booking.service.name}
+                            </h3>
+                            <div className="flex items-center gap-2 text-sm text-gray-500">
+                              <MdCategory />
+                              {booking.service.caterory}
+                            </div>
+                            <div className="flex items-center gap-2 text-sm text-gray-500">
+                              <FaMoneyBill /> ${booking.service.price}
+                            </div>
+                          </div>
+                        </div>
+                      </td>
+
+                      <td>
+                        <div className="flex items-center gap-3">
+                          <div className="avatar">
+                            <div className="w-12 h-12 rounded-full">
+                              <img src={booking.user.photo} />
+                            </div>
+                          </div>
+                          <div>
+                            <h4 className="font-semibold">{booking.user.name}</h4>
+                            <div className="flex items-center gap-1 text-sm text-gray-500">
+                              <MdEmail />
+                              {booking.user.email}
+                            </div>
+                          </div>
+                        </div>
+                      </td>
+
+                      <td>
+                        <div className="space-y-2 text-sm">
+                          <div className="flex items-center gap-2">
+                            <FaCalendarAlt />
+                            {booking.service.bookTime}
+                          </div>
+                          <div className="flex items-center gap-2">
+                            <FaTag />
+                            {booking.service.unit}
+                          </div>
+                        </div>
+                      </td>
+
+                      <td>
+                        <div
+                          className={`badge badge-lg p-4 font-bold ${getStatusColor(
+                            booking.service.status
+                          )}`}
+                        >
+                          {booking.service.status}
+                        </div>
+                      </td>
+
+                      {/* CANCEL BUTTON */}
+                      <td>
+                        <button
+                          onClick={() => handleCancel(booking._id)}
+                          className="btn btn-error btn-sm flex items-center gap-2"
+                        >
+                          <FaTrash /> Cancel
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
           </div>
         </div>
 
-        {/* Stats */}
-        <div className="flex gap-4 text-sm">
-          <span className="px-3 py-1 bg-gray-100 rounded-full">
-            Total: {filteredBookings.length}
-          </span>
-          <span className="px-3 py-1 bg-yellow-100 text-yellow-800 rounded-full">
-            Pending: {filteredBookings.filter(b => b.status === 'pending').length}
-          </span>
-          <span className="px-3 py-1 bg-blue-100 text-blue-800 rounded-full">
-            Processing: {filteredBookings.filter(b => b.status === 'processing').length}
-          </span>
-          <span className="px-3 py-1 bg-green-100 text-green-800 rounded-full">
-            Completed: {filteredBookings.filter(b => b.status === 'completed').length}
-          </span>
-        </div>
-      </div>
+        {/* Mobile Responsive Cards */}
+        <div className="lg:hidden grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
+          {filteredBookings.map((booking) => (
+            <div key={booking._id} className="card bg-base-100 shadow-xl">
+              <div className="card-body">
 
-      {/* Bookings Table */}
-      <div className="bg-white rounded-lg shadow overflow-hidden">
-        <div className="overflow-x-auto">
-          <table className="min-w-full">
-            <thead className="bg-gray-50">
-              <tr>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Service
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  User
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Provider
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Category
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Date & Price
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Status
-                </th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-gray-200">
-              {filteredBookings.map((booking) => (
-                <tr key={booking.id} className="hover:bg-gray-50">
-                  {/* Service Column */}
-                  <td className="px-6 py-4">
-                    <div className="flex items-center">
-                      <img
-                        src={booking.serviceImage}
-                        alt={booking.service}
-                        className="w-12 h-12 rounded-lg object-cover mr-3"
-                      />
-                      <div>
-                        <div className="font-medium text-gray-900">{booking.service}</div>
+                {/* Top Row (service + status) */}
+                <div className="flex justify-between items-start">
+                  <div className="flex items-center gap-3">
+                    <div className="avatar">
+                      <div className="w-16 h-16 rounded-lg">
+                        <img src={booking.service.image} />
                       </div>
                     </div>
-                  </td>
-
-                  {/* User Column */}
-                  <td className="px-6 py-4">
                     <div>
-                      <div className="font-medium text-gray-900">{booking.userName}</div>
-                      <div className="text-sm text-gray-500">{booking.userEmail}</div>
-                    </div>
-                  </td>
-
-                  {/* Provider Column */}
-                  <td className="px-6 py-4">
-                    <div>
-                      <div className="font-medium text-gray-900">{booking.providerName}</div>
-                      <div className="text-sm text-gray-500">{booking.providerEmail}</div>
-                    </div>
-                  </td>
-
-                  {/* Category Column */}
-                  <td className="px-6 py-4">
-                    <span className="px-3 py-1 bg-gray-100 rounded-full text-sm">
-                      {booking.category}
-                    </span>
-                  </td>
-
-                  {/* Date & Price */}
-                  <td className="px-6 py-4">
-                    <div className="text-sm text-gray-900">{booking.date}</div>
-                    <div className="text-sm font-medium text-green-600">{booking.price}</div>
-                  </td>
-
-                  {/* Status Column */}
-                  <td className="px-6 py-4">
-                    {editingId === booking.id ? (
-                      <div className="flex items-center space-x-2">
-                        <select
-                          className="border rounded px-2 py-1 text-sm"
-                          value={editStatus}
-                          onChange={(e) => setEditStatus(e.target.value)}
-                        >
-                          <option value="pending">Pending</option>
-                          <option value="processing">Processing</option>
-                          <option value="completed">Completed</option>
-                        </select>
-                        <button
-                          onClick={() => saveEdit(booking.id)}
-                          className="text-green-600 hover:text-green-800"
-                        >
-                          <FaCheck />
-                        </button>
-                        <button
-                          onClick={cancelEdit}
-                          className="text-red-600 hover:text-red-800"
-                        >
-                          <FaTimes />
-                        </button>
+                      <h2 className="font-bold text-lg">{booking.service.name}</h2>
+                      <div className="badge badge-neutral mt-1">
+                        {booking.service.caterory}
                       </div>
-                    ) : (
-                      <div className="flex items-center space-x-2">
-                        <span className={`px-3 py-1 rounded-full text-xs font-medium ${getStatusColor(booking.status)}`}>
-                          {booking.status.charAt(0).toUpperCase() + booking.status.slice(1)}
-                        </span>
-                        <button
-                          onClick={() => startEdit(booking.id, booking.status)}
-                          className="text-gray-400 hover:text-gray-600"
-                        >
-                          <FaEdit />
-                        </button>
-                      </div>
-                    )}
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+                    </div>
+                  </div>
+
+                  <div
+                    className={`badge badge-lg ${getStatusColor(
+                      booking.service.status
+                    )}`}
+                  >
+                    {booking.service.status}
+                  </div>
+                </div>
+
+                {/* Price */}
+                <div className="flex items-center gap-2 mt-3 text-lg font-bold">
+                  <FaMoneyBill /> ${booking.service.price}
+                </div>
+
+                <div className="divider"></div>
+
+                {/* Provider */}
+                <div className="flex items-center gap-3">
+                  <img className="w-12 h-12 rounded-full" src={booking.provider.photo} />
+                  <div>
+                    <p className="font-semibold">{booking.provider.name}</p>
+                    <p className="text-sm text-gray-500">{booking.provider.email}</p>
+                  </div>
+                </div>
+
+                {/* Booking Details */}
+                <div className="mt-4 space-y-2">
+                  <div className="flex justify-between">
+                    <span className="text-sm">Booked By</span>
+                    <span className="font-medium">{booking.user.name}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-sm">Time</span>
+                    <span>{booking.service.bookTime}</span>
+                  </div>
+                </div>
+
+                {/* Cancel Button */}
+                <button
+                  onClick={() => handleCancel(booking._id)}
+                  className="btn btn-error mt-4"
+                >
+                  <FaTrash /> Cancel Booking
+                </button>
+
+              </div>
+            </div>
+          ))}
         </div>
 
-        {/* Empty State */}
-        {filteredBookings.length === 0 && (
-          <div className="text-center py-12">
-            <div className="text-gray-400 mb-2">No bookings found</div>
-            <div className="text-gray-500 text-sm">Try changing your search or filters</div>
-          </div>
-        )}
-      </div>
-
-      {/* Summary */}
-      <div className="mt-6 text-sm text-gray-600">
-        Showing {filteredBookings.length} of {bookings.length} bookings
       </div>
     </div>
   );

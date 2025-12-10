@@ -1,10 +1,18 @@
 import axios from "axios";
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router";
-import { FaStar, FaArrowLeft, FaUserCircle, FaComment, FaCalendarAlt } from "react-icons/fa";
+import {
+  FaStar,
+  FaArrowLeft,
+  FaUserCircle,
+  FaComment,
+  FaCalendarAlt,
+} from "react-icons/fa";
 import { MdEmail, MdCategory } from "react-icons/md";
+import { AuthContext } from "../../providers/AuthContext";
 
 const ServiceDetails = () => {
+  const { user } = useContext(AuthContext);
   const [data, setData] = useState(null);
   const [visibleReviews, setVisibleReviews] = useState(4);
   const { id } = useParams();
@@ -25,12 +33,47 @@ const ServiceDetails = () => {
 
   const handleShowMoreReviews = () => {
     if (data?.reviews) {
-      setVisibleReviews(prev => prev + 4);
+      setVisibleReviews((prev) => prev + 4);
     }
   };
 
   const handleShowLessReviews = () => {
     setVisibleReviews(4);
+  };
+// console.log(user);
+  const handleBooking = async () => {
+    try {
+      const bookingData = {
+        uid: user.uid,
+        user: {
+          name: user?.displayName,
+          email: user?.email,
+          photo: user?.photoURL,
+        },
+        provider: {
+          name: data?.providerName,
+          email: data?.providerEmail,
+          photo: data?.providerPhoto,
+        },
+        service: {
+          name: data?.serviceName,
+          image: data?.ServicImage,
+          unit: data?.unit,
+          caterory: data?.serviceCategory,
+          price: Number(data?.price),
+          id: data._id,
+          bookTime: new Date().toLocaleString(),
+          status: 'Unpaid'
+        },
+      };
+      await axios.post(`http://localhost:3000/booking-data`, bookingData)
+      .then((res) => {
+        console.log(res)
+        navigate("/dashboard/bookings")
+      })
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   if (!data) {
@@ -53,7 +96,10 @@ const ServiceDetails = () => {
       </div>
     );
   }
+  // console.log(data);
+  // console.log(user);
 
+  // console.log(bookData);
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 p-4 md:p-8">
       <div className="max-w-7xl mx-auto">
@@ -65,7 +111,7 @@ const ServiceDetails = () => {
           >
             <FaArrowLeft /> Back
           </button>
-          
+
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
             <h1 className="text-3xl md:text-4xl font-bold text-gray-800">
               Service Details
@@ -135,7 +181,10 @@ const ServiceDetails = () => {
                               <div className="avatar">
                                 <div className="w-12 h-12 rounded-full">
                                   <img
-                                    src={review.CommenterPhoto || "https://via.placeholder.com/100"}
+                                    src={
+                                      review.CommenterPhoto ||
+                                      "https://via.placeholder.com/100"
+                                    }
                                     alt={review.CommenterName}
                                     className="object-cover"
                                   />
@@ -169,7 +218,9 @@ const ServiceDetails = () => {
                               </div>
                             )}
                           </div>
-                          <p className="mt-3 text-gray-700 pl-16">{review.comment}</p>
+                          <p className="mt-3 text-gray-700 pl-16">
+                            {review.comment}
+                          </p>
                         </div>
                       </div>
                     ))}
@@ -199,7 +250,9 @@ const ServiceDetails = () => {
                 ) : (
                   <div className="text-center py-8">
                     <FaComment className="text-4xl text-gray-300 mx-auto mb-3" />
-                    <p className="text-gray-500 italic">No reviews available yet</p>
+                    <p className="text-gray-500 italic">
+                      No reviews available yet
+                    </p>
                     <p className="text-sm text-gray-400 mt-1">
                       Be the first to review this service!
                     </p>
@@ -257,7 +310,9 @@ const ServiceDetails = () => {
                     </div>
                   </div>
                   <div className="text-right">
-                    <div className="text-2xl font-bold">{data.TotalRating || 0}</div>
+                    <div className="text-2xl font-bold">
+                      {data.TotalRating || 0}
+                    </div>
                     <div className="text-sm text-gray-500">Total Ratings</div>
                   </div>
                 </div>
@@ -274,14 +329,19 @@ const ServiceDetails = () => {
                         <div className="avatar">
                           <div className="w-16 h-16 rounded-full ring ring-primary ring-offset-2">
                             <img
-                              src={data.providerPhoto || "https://via.placeholder.com/100"}
+                              src={
+                                data.providerPhoto ||
+                                "https://via.placeholder.com/100"
+                              }
                               alt={data.providerName}
                               className="object-cover"
                             />
                           </div>
                         </div>
                         <div>
-                          <h4 className="font-bold text-xl">{data.providerName}</h4>
+                          <h4 className="font-bold text-xl">
+                            {data.providerName}
+                          </h4>
                           <div className="flex items-center gap-2 text-gray-600">
                             <MdEmail />
                             {data.providerEmail}
@@ -295,13 +355,13 @@ const ServiceDetails = () => {
                 {/* Action Buttons */}
                 <div className="mt-8 space-y-3">
                   <button
-                    onClick={() => navigate("/contact")}
+                    onClick={() => handleBooking()}
                     className="btn btn-primary btn-block btn-lg"
                   >
-                    Book This Service
+                    Book Service
                   </button>
                   <button
-                    onClick={() => navigate("/")}
+                    onClick={() => navigate("/services")}
                     className="btn btn-outline btn-block"
                   >
                     Browse More Services
@@ -325,7 +385,9 @@ const ServiceDetails = () => {
                   <div className="stats shadow">
                     <div className="stat">
                       <div className="stat-title">Category</div>
-                      <div className="stat-value text-lg">{data.serviceCategory}</div>
+                      <div className="stat-value text-lg">
+                        {data.serviceCategory}
+                      </div>
                     </div>
                   </div>
                 </div>

@@ -1,130 +1,137 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import { FaInfo, FaInfoCircle } from "react-icons/fa";
+import { FaStar, FaEye } from "react-icons/fa";
 import { Link } from "react-router";
 
 const TopServices = () => {
+  const [data, setData] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-  const [ data, setData ] = useState([]);
-
-  // Services data with images, provider names, ratings, etc.
   useEffect(() => {
     const loadData = async () => {
       try {
         const res = await axios.get("http://localhost:3000/services");
-        setData(res.data);
+        setData(res.data.slice(0, 6));
       } catch (error) {
         console.log(error);
+      } finally {
+        setLoading(false);
       }
     };
-
     loadData();
   }, []);
-  console.log(data);
-  // Handle details button click
-  // const handleDetailsClick = (service) => {
-  //   alert(
-  //     `Service Details:\n\nName: ${service.name}\nProvider: ${service.providerName}\nPrice: ${service.price}\nRating: ${service.rating}/5\n\n${service.description}`
-  //   );
-  // };
+
+  if (loading) {
+    return (
+      <div className="py-16 bg-gray-50">
+        <div className="max-w-7xl mx-auto px-4">
+          <div className="text-center mb-10">
+            <h2 className="text-3xl font-bold mb-3 bg-gray-200 h-10 w-64 mx-auto rounded animate-pulse"></h2>
+            <p className="bg-gray-200 h-6 w-96 mx-auto rounded animate-pulse"></p>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {[...Array(6)].map((_, i) => (
+              <div key={i} className="card bg-white shadow-lg">
+                <div className="skeleton h-48 w-full rounded-t-lg"></div>
+                <div className="card-body p-6 space-y-4">
+                  <div className="skeleton h-6 w-3/4"></div>
+                  <div className="skeleton h-4 w-1/2"></div>
+                  <div className="skeleton h-4 w-full"></div>
+                  <div className="skeleton h-12 w-full rounded-lg"></div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
-    <div className="py-12 bg-base-100">
-      <div className="container mx-auto px-4">
-        {/* Section Header */}
-        <div className="text-center mb-10">
-          <h2 className="text-3xl md:text-4xl font-bold mb-4">
-            Our <span className="text-primary">Top Services</span>
+    <div className="py-16 bg-gradient-to-b from-gray-50 to-white">
+      <div className="max-w-7xl mx-auto px-4">
+        {/* Header */}
+        <div className="text-center mb-12">
+          <h2 className="text-4xl font-bold text-gray-800 mb-4">
+            Popular <span className="text-primary">Services</span>
           </h2>
-          <p className="text-lg opacity-80 max-w-2xl mx-auto">
-            Explore our most popular decoration services from trusted providers
+          <p className="text-gray-600 text-lg max-w-2xl mx-auto">
+            Most booked services with excellent ratings
           </p>
         </div>
 
         {/* Services Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {data.map((service) => (
             <div
               key={service._id}
-              className="card bg-base-200 shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1"
+              className="group bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 border border-gray-100 overflow-hidden"
             >
-              {/* Service Image */}
-              <figure className="px-6 pt-6">
+              {/* Image Container */}
+              <div className="relative overflow-hidden">
                 <img
                   src={service.ServicImage}
                   alt={service.serviceName}
-                  className="rounded-xl h-48 w-full object-cover"
+                  className="w-full h-56 object-cover group-hover:scale-105 transition-transform duration-500"
                 />
-              </figure>
-
-              <div className="card-body p-6">
-                {/* Service Name & Provider */}
-                <div className="mb-4">
-                  <h3 className="card-title text-xl font-bold mb-1">
-                    {service.serviceName}
-                  </h3>
-                  <div className="flex items-center gap-2 text-sm opacity-80">
-                    <span className="font-medium">Provider:</span>
-                    <span>{service.providerName}</span>
-                  </div>
+                <div className="absolute top-4 right-4 bg-primary text-white px-3 py-1 rounded-full text-sm font-semibold">
+                  ${service.price}
                 </div>
+              </div>
 
-                {/* Rating Section */}
-                <div className="flex items-center justify-between mb-4">
+              {/* Content */}
+              <div className="p-6">
+                {/* Title & Provider */}
+                <h3 className="text-xl font-bold text-gray-800 mb-2 line-clamp-1">
+                  {service.serviceName}
+                </h3>
+                <p className="text-gray-500 text-sm mb-4">
+                  By: <span className="font-medium">{service.providerName}</span>
+                </p>
+
+                {/* Rating */}
+                <div className="flex items-center gap-4 mb-4">
                   <div className="flex items-center gap-2">
-                    {/* Star Rating */}
-                    <div className="rating rating-sm">
-                      {[1, 2, 3, 4, 5].map((star) => (
-                        <input
-                          key={star}
-                          type="radio"
-                          name={service.AvgRating}
-                          className="mask mask-star-2 bg-yellow-400"
-                          checked={star <= Math.round(service.AvgRating)}
-                          readOnly
+                    <div className="flex text-yellow-500">
+                      {[...Array(5)].map((_, i) => (
+                        <FaStar
+                          key={i}
+                          className={i < Math.round(service.AvgRating) ? "fill-current" : "text-gray-300"}
                         />
                       ))}
                     </div>
-
-                    {/* Rating Number & Reviews */}
-                    <div className="flex items-center gap-1">
-                      <span className="font-bold">{service.TotalRating}</span>
-                      <span className="opacity-70 text-sm">
-                        ({service.reviews.length})
-                      </span>
-                    </div>
+                    <span className="font-bold">{service.AvgRating}</span>
                   </div>
-
-                  {/* Price */}
-                  <div className="text-xl font-bold text-primary">
-                    {service.price} BDT
-                  </div>
+                  <span className="text-gray-500">
+                    ({service.TotalRating} reviews)
+                  </span>
                 </div>
 
                 {/* Description */}
-                <p className="text-sm opacity-80 mb-6 line-clamp-2">
+                <p className="text-gray-600 mb-6 line-clamp-2 text-sm">
                   {service.description}
                 </p>
 
-                {/* Action Button */}
-                <div className="card-actions">
-                  <Link
-                    className="btn btn-primary w-full gap-2"
-                    to={`/services/${service._id}`}
-                  >
-                    <FaInfoCircle className="text-base mb-0.5"/>
-                    <span>View Details</span>
-                    
-                  </Link>
-                </div>
+                {/* Button */}
+                <Link
+                  to={`/services/${service._id}`}
+                  className="btn btn-primary w-full gap-2 hover:gap-3 transition-all"
+                >
+                  <FaEye /> View Details
+                </Link>
               </div>
             </div>
           ))}
         </div>
 
-        {/* Call to Action */}
+        {/* View All Button */}
         <div className="text-center mt-12">
-          <Link to='/services' className="btn btn-outline btn-lg">View All Services</Link>
+          <Link
+            to="/services"
+            className="btn btn-outline btn-primary px-8 hover:btn-primary transition-colors"
+          >
+            View All Services
+          </Link>
         </div>
       </div>
     </div>
