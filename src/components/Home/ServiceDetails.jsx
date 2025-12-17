@@ -40,7 +40,7 @@ const ServiceDetails = () => {
   const handleShowLessReviews = () => {
     setVisibleReviews(4);
   };
-// console.log(user);
+console.log(data);
   const handleBooking = async () => {
     try {
       const bookingData = {
@@ -58,6 +58,7 @@ const ServiceDetails = () => {
         service: {
           name: data?.serviceName,
           image: data?.ServicImage,
+          description: data?.description,
           unit: data?.unit,
           caterory: data?.serviceCategory,
           price: Number(data?.price),

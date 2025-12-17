@@ -10,6 +10,8 @@ import {
 } from "react-icons/fa";
 import { MdEmail, MdCategory } from "react-icons/md";
 import { AuthContext } from "../../providers/AuthContext";
+import { useForm } from "react-hook-form";
+import { Link } from "react-router";
 
 const UserBookedData = () => {
   const { user } = useContext(AuthContext);
@@ -17,27 +19,32 @@ const UserBookedData = () => {
   const [loading, setLoading] = useState(true);
   const [showPayModal, setShowPayModal] = useState(false);
   const [selectedBooking, setSelectedBooking] = useState(null);
-console.log(user);
+
+  const { register, watch } = useForm({});
+  const quantity = watch("quantity", 1);
+  const location = watch("location", "Dhaka");
+
+  //   console.log(quantity);
   const uid = user?.uid;
-    console.log(uid);
 
   useEffect(() => {
-    const fetchBookings = async () => {
-      try {
-        const response = await axios.get(`http://localhost:3000/booking-data/${uid}`
-        );
-        setBookings(response.data);
-      } catch (error) {
-        console.error("Error fetching bookings:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
     if (uid) {
       fetchBookings();
     }
   }, [uid]);
+
+  const fetchBookings = async () => {
+    try {
+      const response = await axios.get(
+        `http://localhost:3000/booking-data/${uid}`
+      );
+      setBookings(response.data);
+    } catch (error) {
+      console.error("Error fetching bookings:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const handlePay = (booking) => {
     setSelectedBooking(booking);
@@ -45,28 +52,30 @@ console.log(user);
   };
 
   const handleCancel = async (bookingId) => {
-    if (window.confirm("Are you sure you want to cancel this booking?")) {
-      try {
-        // await axios.delete(`http://localhost:3000/booking-data/${bookingId}`);
-        // fetchBookings(); // Refresh data
-      } catch (error) {
-        console.error("Error canceling booking:", error);
-      }
+    alert("delete successfull..!");
+    fetchBookings();
+
+    try {
+      await axios.delete(`http://localhost:3000/booking-data/${bookingId}`);
+    } catch (error) {
+      console.error("Error canceling booking:", error);
     }
   };
 
   const handlePaymentSubmit = async () => {
     if (!selectedBooking) return;
-
+    const totalPrice = parseFloat(quantity * selectedBooking.service.price);
+    // console.log(totalPrice);
+    const payInfo = { ...selectedBooking, totalPrice, location };
+    console.log(payInfo);
+    setShowPayModal(false);
     try {
-      await axios.patch(
-        // `http://localhost:3000/booking-data/${selectedBooking._id}`,
-        {
-          status: "Paid",
-        }
+      const result = await axios.post(
+        `http://localhost:3000/create-checkout-session`,
+        payInfo
       );
-      setShowPayModal(false);
-      //   fetchBookings(); // Refresh data
+      const redirectUrl = result.data.url;
+      window.location.href = redirectUrl;
     } catch (error) {
       console.error("Payment error:", error);
     }
@@ -149,7 +158,8 @@ console.log(user);
                             {booking.service.caterory}
                           </div>
                           <div className="flex items-center gap-2 text-sm text-gray-500 mt-1">
-                            <FaMoneyBill />${booking.service.price}
+                            <FaMoneyBill />
+                            BDT {booking.service.price}/{booking.service.unit}
                           </div>
                         </div>
                       </div>
@@ -201,19 +211,28 @@ console.log(user);
                     <td className="p-4">
                       <div className="flex gap-2">
                         {booking.service.status === "Unpaid" && (
-                          <button
-                            onClick={() => handlePay(booking)}
-                            className="btn btn-sm btn-primary flex items-center gap-2"
-                          >
-                            <FaCreditCard /> Pay
-                          </button>
+                          <>
+                            <button
+                              onClick={() => handlePay(booking)}
+                              className="btn btn-sm btn-primary flex items-center gap-2"
+                            >
+                              <FaCreditCard /> Pay
+                            </button>
+                            <button
+                              onClick={() => handleCancel(booking._id)}
+                              className="btn btn-sm btn-outline btn-error flex items-center gap-2"
+                            >
+                              <FaTimes /> Cancel
+                            </button>
+                          </>
                         )}
-                        <button
-                          onClick={() => handleCancel(booking._id)}
-                          className="btn btn-sm btn-outline btn-error flex items-center gap-2"
-                        >
-                          <FaTimes /> Cancel
-                        </button>
+                        {
+                          booking.service.status === "Paid" && (
+                            <Link to='/dashboard/payments' className="btn btn-sm btn-accent  flex justify-center shadow-xl items-center">
+                            Browse Payments
+                            </Link>
+                          )
+                        }
                       </div>
                     </td>
                   </tr>
@@ -263,7 +282,7 @@ console.log(user);
                       <span>Price:</span>
                     </div>
                     <span className="font-bold text-lg">
-                      ${booking.service.price}
+                      BDT {booking.service.price}/{booking.service.unit}
                     </span>
                   </div>
 
@@ -322,11 +341,11 @@ console.log(user);
 
         {/* Payment Modal */}
         {showPayModal && selectedBooking && (
-          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+          <div className="fixed inset-0 bg-black/50 bg-opacity-50 flex items-center justify-center p-4 z-50">
             <div className="bg-white rounded-xl shadow-2xl max-w-md w-full">
               <div className="p-6">
                 <div className="flex justify-between items-center mb-6">
-                  <h3 className="text-2xl font-bold">Complete Payment</h3>
+                  <h3 className="text-2xl font-bold">Payment info</h3>
                   <button
                     onClick={() => setShowPayModal(false)}
                     className="text-gray-400 hover:text-gray-600"
@@ -337,54 +356,93 @@ console.log(user);
 
                 <div className="space-y-4 mb-6">
                   <div className="flex justify-between">
-                    <span className="text-gray-600">Service:</span>
+                    <span className="text-gray-600">Service Name:</span>
                     <span className="font-semibold">
                       {selectedBooking.service.name}
                     </span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-gray-600">Provider:</span>
+                    <span className="text-gray-600">Provider Name:</span>
                     <span className="font-semibold">
                       {selectedBooking.provider.name}
                     </span>
                   </div>
+                  <div className="flex justify-between">
+                    <span className="text-gray-600">Provider email:</span>
+                    <span className="font-semibold">
+                      {selectedBooking.provider.email}
+                    </span>
+                  </div>
+                  <hr />
+                  <div className="flex justify-between">
+                    <span className="text-gray-600">User Name:</span>
+                    <span className="font-semibold">{user.displayName}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-gray-600">User email:</span>
+                    <span className="font-semibold">{user?.email}</span>
+                  </div>
                   <div className="flex justify-between text-lg">
-                    <span className="font-bold">Total Amount:</span>
+                    <span className="font-bold">Price:</span>
                     <span className="font-bold text-green-600">
-                      ${selectedBooking.service.price}
+                      BDT {selectedBooking.service.price}/
+                      {selectedBooking.service.unit}
                     </span>
                   </div>
                 </div>
 
                 <div className="space-y-3">
-                  <input
-                    type="text"
-                    placeholder="Card Number"
-                    className="input input-bordered w-full"
-                  />
-                  <div className="flex gap-3">
-                    <input
-                      type="text"
-                      placeholder="MM/YY"
-                      className="input input-bordered flex-1"
-                    />
-                    <input
-                      type="text"
-                      placeholder="CVV"
-                      className="input input-bordered flex-1"
-                    />
+                  <form className="flex flex-col gap-3">
+                    <div className="flex">
+                      <label
+                        className="flex-1 font-bold text-lg"
+                        htmlFor="quantity"
+                      >
+                        Get total Unit:
+                      </label>
+                      <input
+                        id="quantity"
+                        type="number"
+                        defaultValue={1}
+                        placeholder="total Unit"
+                        className="input flex-1"
+                        {...register("quantity", { min: 1 })}
+                      />
+                    </div>
+                    <div>
+                      <label
+                        className="flex-1 font-bold text-lg"
+                        htmlFor="location"
+                      >
+                        On site Location :
+                      </label>
+                      <input
+                        id="location"
+                        type="text"
+                        defaultValue="Dhaka"
+                        placeholder="Service location"
+                        className="input  w-full"
+                        {...register("location", {})}
+                      />
+                    </div>
+                  </form>
+                  <hr />
+                  <div className="flex justify-between text-lg">
+                    <span className="font-bold">Total Price:</span>
+                    <span className="font-bold text-green-600">
+                      {parseFloat(quantity) * selectedBooking?.service?.price}{" "}
+                      BDT
+                    </span>
                   </div>
-                  <input
-                    type="text"
-                    placeholder="Card Holder Name"
-                    className="input input-bordered w-full"
-                  />
+                  <span className="font-bold text-xl text-green-600 text-wrap line-clamp-1">
+                    {location}
+                  </span>
                 </div>
 
                 <div className="mt-8 flex gap-3">
                   <button
                     onClick={() => setShowPayModal(false)}
-                    className="btn btn-outline flex-1"
+                    className="btn btn-outline flex-1 "
                   >
                     Cancel
                   </button>
@@ -392,7 +450,8 @@ console.log(user);
                     onClick={handlePaymentSubmit}
                     className="btn btn-primary flex-1 flex items-center justify-center gap-2"
                   >
-                    <FaCreditCard /> Pay ${selectedBooking.service.price}
+                    <FaCreditCard /> Pay BDT {selectedBooking.service.price}/
+                    {selectedBooking.service.unit}
                   </button>
                 </div>
               </div>

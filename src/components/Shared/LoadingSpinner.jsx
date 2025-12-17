@@ -1,4 +1,4 @@
-import { ScaleLoader } from 'react-spinners'
+import ScaleLoader from '../../assets/spinner.gif'
 
 const LoadingSpinner = ({ smallHeight }) => {
   return (
@@ -9,7 +9,7 @@ const LoadingSpinner = ({ smallHeight }) => {
       justify-center 
       items-center `}
     >
-      <ScaleLoader size={100} color='lime' />
+      <img src={ScaleLoader} alt="Loading..." />
     </div>
   )
 }

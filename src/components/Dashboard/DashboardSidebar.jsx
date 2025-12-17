@@ -23,7 +23,7 @@ import {
 } from "react-icons/fa";
 import { FaList } from "react-icons/fa6";
 
-const DashboardSidebar = ({ userRole = "user" }) => {
+const DashboardSidebar = ({ userRole = "admin" }) => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const [isMobile, setIsMobile] = useState(false);
 
