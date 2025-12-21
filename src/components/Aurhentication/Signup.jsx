@@ -33,7 +33,6 @@ const Signup = () => {
     formState: { errors, isSubmitting },
     watch,
     setError,
-    clearErrors,
   } = useForm();
 
   const passwordValue = watch("password");

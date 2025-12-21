@@ -7,9 +7,9 @@ import ServiceCoverageMap from '../../components/Home/ServiceCoverageMap';
 const Home = () => {
     return (
         <div>
+            <SimpleHomeHero></SimpleHomeHero>
             <TopServices></TopServices>
             <TopDecorators></TopDecorators>
-            <SimpleHomeHero></SimpleHomeHero>
             <ServiceCoverageMap></ServiceCoverageMap>
         </div>
     );

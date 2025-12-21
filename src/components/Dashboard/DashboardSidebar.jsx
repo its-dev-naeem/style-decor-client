@@ -66,12 +66,6 @@ const DashboardSidebar = () => {
       to: "/dashboard/profile",
     },
     {
-      id: "dashboard",
-      name: "Dashboard",
-      icon: <FaTachometerAlt />,
-      to: "/dashboard",
-    },
-    {
       id: "bookings",
       name: "My Bookings",
       icon: <FaCalendarAlt />,
@@ -92,12 +86,6 @@ const DashboardSidebar = () => {
       name: "My Profile",
       icon: <FaUser />,
       to: "/dashboard/profile",
-    },
-    {
-      id: "dashboard",
-      name: "Dashboard",
-      icon: <FaTachometerAlt />,
-      to: "/dashboard/admin-dashboard",
     },
     {
       id: "decorators",
@@ -150,12 +138,6 @@ const DashboardSidebar = () => {
       name: "My Profile",
       icon: <FaUser />,
       to: "/dashboard/profile",
-    },
-    {
-      id: "dashboard",
-      name: "Dashboard",
-      icon: <FaTachometerAlt />,
-      to: "/dashboard/decorator-dashboard",
     },
     {
       id: "projects",

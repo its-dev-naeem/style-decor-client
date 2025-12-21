@@ -17,7 +17,7 @@ const Navbar = () => {
     isLoggedIn && 
     <>
     <li><NavLink to='/coverage' className='text-primary'>Coverage</NavLink></li>
-    <li><NavLink to='/dashboard' className='text-primary'>Dashboard</NavLink></li>
+    <li><NavLink to='/dashboard/profile' className='text-primary'>Dashboard</NavLink></li>
     </>
   }
   </>

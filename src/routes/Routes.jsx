@@ -21,6 +21,8 @@ import PaymentSuccess from "../components/User/PaymentSuccess";
 import PaymentStatus from "../components/User/PaymentStatus";
 import ServiceManagement from "../components/Admin/ServiceManagement";
 import RevenueMonitoring from "../components/Admin/RevenueMonitoring";
+import AnalyticsCharts from "../components/Admin/AnalyticsCharts";
+import MyAssignedProject from "../components/Decorator/MyAssignedProject";
 
 export const router = createBrowserRouter([
   {
@@ -73,10 +75,6 @@ export const router = createBrowserRouter([
     children: [
       // user dashboard links
       {
-        index: true,
-        element: <Dashboard />,
-      },
-      {
         path: "/dashboard/profile",
         element: <ProfilePage />,
       },
@@ -89,10 +87,6 @@ export const router = createBrowserRouter([
         element: <PaymentStatus />,
       },
       // admin dashboard links
-      {
-        path: "/dashboard/admin-dashboard",
-        element: <Dashboard />,
-      },
       {
         path: "/dashboard/profile",
         element: <ProfilePage />,
@@ -123,7 +117,7 @@ export const router = createBrowserRouter([
       },
       {
         path: "/dashboard/admin-analytics",
-        element: <Dashboard />,
+        element: <AnalyticsCharts />,
       },
       // decorator dashboard links
       {
@@ -131,12 +125,8 @@ export const router = createBrowserRouter([
         element: <ProfilePage />,
       },
       {
-        path: "/dashboard/decorator-dashboard",
-        element: <About />,
-      },
-      {
         path: "/dashboard/decorator-projects",
-        element: <Dashboard />,
+        element: <MyAssignedProject />,
       },
       {
         path: "/dashboard/decorator-schedule",

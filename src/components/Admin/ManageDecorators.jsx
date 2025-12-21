@@ -11,7 +11,7 @@ const ManageDecorators = () => {
   const [selectedRole, setSelectedRole] = useState("All User");
   const [showRequestModal, setShowRequestModal] = useState(false);
   const [selectedUserId, setSelectedUserId] = useState(null);
-
+// console.log();
   const [request, setRequest] = useState([]);
   const [decoratorRequests, setDecoratorRequests] = useState([]);
 
@@ -75,17 +75,17 @@ const ManageDecorators = () => {
     filterUsers();
   }, [searchTerm, selectedRole, users]);
 
-  const handleRoleChange = async (userId, newRole) => {
+  const handleRoleChange = async (userEmail, newRole) => {
     try {
       // API call to update role
-      await axios.put(`http://localhost:3000/update-role/${userId}`, {
+      await axios.put(`http://localhost:3000/update-role/${userEmail}`, {
         role: newRole,
       });
 
       // Update local state
       setUsers(
         users.map((user) =>
-          user._id === userId ? { ...user, role: newRole } : user
+          user.email === userEmail ? { ...user, role: newRole } : user
         )
       );
 
@@ -96,17 +96,23 @@ const ManageDecorators = () => {
     }
   };
 
-  const handleRequestAction = (requestId, action) => {
+  const handleReject = async (id) => {
+    await axios.delete(`http://localhost:3000/delete-request/${id}`)
+  }
+  
+  // console.log(decoratorRequests);
+  const handleRequestAction = (requestId, requestEmail, action) => {
     // Remove request from list
     setDecoratorRequests(
-      decoratorRequests.filter((req) => req.id !== requestId)
+      decoratorRequests.filter((req) => req._id !== requestId)
     );
 
     if (action === "accept") {
-      alert("Request accepted!");
-      // Here you would call API to update user role to 'decorator'
+      handleRoleChange(requestEmail, 'decorator')
+      handleReject(requestId)
     } else {
       alert("Request rejected!");
+      handleReject(requestId)
     }
   };
 
@@ -255,7 +261,7 @@ const ManageDecorators = () => {
                 <div className="hidden md:grid md:col-span-2 items-center justify-center py-3">
                   <select
                     value={user.role}
-                    onChange={(e) => handleRoleChange(user._id, e.target.value)}
+                    onChange={(e) => handleRoleChange(user.email, e.target.value)}
                     className="select select-bordered w-40"
                   >
                     <option value="user">User</option>
@@ -302,7 +308,7 @@ const ManageDecorators = () => {
                     <div className="flex gap-2">
                       <button
                         onClick={() =>
-                          handleRequestAction(request.id, "accept")
+                          handleRequestAction(request._id, request.email, "accept")
                         }
                         className="btn btn-sm btn-success"
                       >
@@ -310,7 +316,7 @@ const ManageDecorators = () => {
                       </button>
                       <button
                         onClick={() =>
-                          handleRequestAction(request.id, "reject")
+                          handleRequestAction(request._id, request.email, "reject")
                         }
                         className="btn btn-sm btn-error"
                       >

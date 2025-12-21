@@ -17,7 +17,7 @@ import { AuthContext } from "../providers/AuthContext";
 import { saveOrUpdateUser } from "../utils";
 import useRole from "../hooks/useRole";
 import axios from "axios";
-import toast from "react-hot-toast";
+// import toast from "react-hot-toast";
 
 const ProfilePage = () => {
   const { user, updateNamePhoto, updateEmail } = useContext(AuthContext);
