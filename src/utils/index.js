@@ -11,3 +11,14 @@ export const imageUpload = async (imageData) => {
 
   return data?.data?.display_url;
 };
+
+
+
+// save or update user in db
+export const saveOrUpdateUser = async userData => {
+  const { data } = await axios.post(
+    `http://localhost:3000/user`,
+    userData
+  )
+  return data
+}

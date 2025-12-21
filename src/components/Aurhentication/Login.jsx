@@ -6,10 +6,11 @@ import {
   FaEye,
   FaEyeSlash,
   FaGoogle,
-  FaArrowRight
+  FaArrowRight,
 } from "react-icons/fa";
 import { AuthContext } from "../../providers/AuthContext";
 import { useForm } from "react-hook-form";
+import { saveOrUpdateUser } from "../../utils";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -23,7 +24,7 @@ const Login = () => {
     handleSubmit,
     formState: { errors, isSubmitting },
     watch,
-    setError
+    setError,
   } = useForm();
 
   // Remember Me check
@@ -34,8 +35,12 @@ const Login = () => {
     try {
       const { email, password } = data;
 
-      const result = await userLogin(email, password);
-
+      const { user } = await userLogin(email, password);
+      await saveOrUpdateUser({
+        name: user?.displayName,
+        email: user?.email,
+        imageURL: user?.photoURL,
+      });
       // Save remember me
       if (rememberMeValue) {
         localStorage.setItem("rememberMe", "true");
@@ -48,7 +53,7 @@ const Login = () => {
     } catch (error) {
       setError("general", {
         type: "manual",
-        message: "Invalid email or password"
+        message: "Invalid email or password",
       });
 
       alert("Login failed: " + error.message);
@@ -58,7 +63,12 @@ const Login = () => {
   // Google Login
   const handleSocialLogin = async () => {
     try {
-      await googleSignIn();
+      const { user } = await googleSignIn();
+      await saveOrUpdateUser({
+        name: user?.displayName,
+        email: user?.email,
+        imageURL: user?.photoURL,
+      });
       navigate("/dashboard");
     } catch (error) {
       alert(error.message);
@@ -110,8 +120,8 @@ const Login = () => {
                     required: "Email is required",
                     pattern: {
                       value: /\S+@\S+\.\S+/,
-                      message: "Invalid email format"
-                    }
+                      message: "Invalid email format",
+                    },
                   })}
                 />
 
@@ -142,8 +152,8 @@ const Login = () => {
                       required: "Password is required",
                       minLength: {
                         value: 6,
-                        message: "Minimum 6 characters"
-                      }
+                        message: "Minimum 6 characters",
+                      },
                     })}
                   />
 
@@ -219,7 +229,10 @@ const Login = () => {
               <div className="text-center mt-6">
                 <p className="opacity-80">
                   Don't have an account?{" "}
-                  <Link to="/signup" className="link link-primary font-semibold">
+                  <Link
+                    to="/signup"
+                    className="link link-primary font-semibold"
+                  >
                     Create Account
                   </Link>
                 </p>

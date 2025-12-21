@@ -13,6 +13,7 @@ const PaymentStatus = () => {
       fetchBookings();
     }
   }, [email]);
+  // console.log(email);
 
   const fetchBookings = async () => {
     try {

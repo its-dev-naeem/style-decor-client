@@ -66,7 +66,7 @@ const UserBookedData = () => {
     if (!selectedBooking) return;
     const totalPrice = parseFloat(quantity * selectedBooking.service.price);
     // console.log(totalPrice);
-    const payInfo = { ...selectedBooking, totalPrice, location };
+    const payInfo = { ...selectedBooking, totalPrice, location, };
     console.log(payInfo);
     setShowPayModal(false);
     try {

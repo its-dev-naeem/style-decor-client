@@ -1,9 +1,12 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { Link, NavLink } from 'react-router';
+import { AuthContext } from '../../../providers/AuthContext';
 
 const Navbar = () => {
-  const [isLoggedIn, setIsLoggedIn] = useState(true);
+  const {user, logoutUser} = useContext(AuthContext);
   const [theme, setTheme] = useState('light');
+
+  var isLoggedIn = user
 
   const Navlinks = <>
   <li><NavLink to='/' className='text-primary'>Home</NavLink></li>
@@ -26,7 +29,7 @@ const Navbar = () => {
   };
 
   const handleLogout = () => {
-    setIsLoggedIn(false);
+    logoutUser()
   };
 
   return (
@@ -74,8 +77,7 @@ const Navbar = () => {
                 <label tabIndex={0} className="btn btn-ghost btn-circle avatar">
                   <div className="w-10 rounded-full">
                     <img
-                      src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
-                      alt="Profile"
+                      src={user?.photoURL}
                     />
                   </div>
                 </label>
@@ -84,9 +86,9 @@ const Navbar = () => {
                   className="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52"
                 >
                   <li>
-                    <a className="justify-between">
+                    <Link to='/dashboard/profile' className="justify-between">
                       Profile
-                    </a>
+                    </Link>
                   </li>
                   <li>
                     <a onClick={toggleTheme} className="justify-between">

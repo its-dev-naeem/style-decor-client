@@ -22,8 +22,11 @@ import {
   FaPlus,
 } from "react-icons/fa";
 import { FaList } from "react-icons/fa6";
+import useRole from "../../hooks/useRole";
 
-const DashboardSidebar = ({ userRole = "admin" }) => {
+const DashboardSidebar = () => {
+  const { role } = useRole();
+  const userRole = role?.role;
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const [isMobile, setIsMobile] = useState(false);
 

@@ -19,6 +19,7 @@ import ServiceDetails from "../components/Home/ServiceDetails";
 import UserBookedData from "../components/User/UserBookedData ";
 import PaymentSuccess from "../components/User/PaymentSuccess";
 import PaymentStatus from "../components/User/PaymentStatus";
+import ServiceManagement from "../components/Admin/ServiceManagement";
 
 export const router = createBrowserRouter([
   {
@@ -105,7 +106,7 @@ export const router = createBrowserRouter([
       },
       {
         path: "/dashboard/admin-services",
-        element: <Dashboard />,
+        element: <ServiceManagement />,
       },
       {
         path: "/dashboard/admin-bookings",

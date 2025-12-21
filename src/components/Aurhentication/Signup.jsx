@@ -12,11 +12,10 @@ import {
 } from "react-icons/fa";
 import { AuthContext } from "../../providers/AuthContext";
 import { useForm } from "react-hook-form";
-import { imageUpload } from "../../utils";
+import { imageUpload, saveOrUpdateUser } from "../../utils";
 
 const Signup = () => {
-  const { createUser, googleSignIn } =
-    useContext(AuthContext);
+  const { createUser, googleSignIn } = useContext(AuthContext);
 
   const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
@@ -25,7 +24,7 @@ const Signup = () => {
   const [photoPreview, setPhotoPreview] = useState("");
   const [photoFile, setPhotoFile] = useState(null);
 
-  // console.log(user); 
+  // console.log(user);
 
   // React Hook Form setup
   const {
@@ -64,12 +63,19 @@ const Signup = () => {
     }
 
     try {
-      const userImage = await imageUpload(photoFile)
+      const userImage = await imageUpload(photoFile);
 
-      const  displayName = datas.name
-      const  photoURL =  userImage || 'https://i.pinimg.com/736x/2f/15/f2/2f15f2e8c688b3120d3d26467b06330c.jpg'
+      const displayName = datas.name;
+      const photoURL =
+        userImage ||
+        "https://i.pinimg.com/736x/2f/15/f2/2f15f2e8c688b3120d3d26467b06330c.jpg";
 
-      await createUser(datas.email, datas.password, photoURL, displayName);
+      await createUser(datas?.email, datas?.password, photoURL, displayName);
+      await saveOrUpdateUser({
+        name: displayName,
+        email: datas?.email,
+        imageURL: photoURL,
+      });
 
       alert("Registration successful!");
       navigate("/dashboard");
@@ -81,9 +87,17 @@ const Signup = () => {
   // Google Login
   const handleSocialLogin = async () => {
     try {
-      await googleSignIn();
+      const result = await googleSignIn();
+      const user = result.user; 
+
+      await saveOrUpdateUser({
+        name: user?.displayName,
+        email: user?.email,
+        imageURL: user?.photoURL,
+      });
     } catch (error) {
       alert(error.message);
+      console.log(error.message);
     }
   };
 
@@ -200,8 +214,7 @@ const Signup = () => {
                       },
                       pattern: {
                         value: /(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])/,
-                        message:
-                          "Must include uppercase, lowercase & number",
+                        message: "Must include uppercase, lowercase & number",
                       },
                     })}
                   />
@@ -238,16 +251,13 @@ const Signup = () => {
                     {...register("confirmPassword", {
                       required: "Please confirm your password",
                       validate: (value) =>
-                        value === passwordValue ||
-                        "Passwords do not match",
+                        value === passwordValue || "Passwords do not match",
                     })}
                   />
                   <button
                     type="button"
                     className="absolute right-3 top-3"
-                    onClick={() =>
-                      setShowConfirmPassword(!showConfirmPassword)
-                    }
+                    onClick={() => setShowConfirmPassword(!showConfirmPassword)}
                   >
                     {showConfirmPassword ? <FaEyeSlash /> : <FaEye />}
                   </button>
@@ -315,10 +325,7 @@ const Signup = () => {
               <div className="text-center mt-6">
                 <p className="opacity-80">
                   Already have an account?{" "}
-                  <Link
-                    to="/login"
-                    className="link link-primary font-semibold"
-                  >
+                  <Link to="/login" className="link link-primary font-semibold">
                     Sign In
                   </Link>
                 </p>
