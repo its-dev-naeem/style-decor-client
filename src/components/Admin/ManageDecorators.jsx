@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { FiSearch, FiUser, FiUserCheck, FiShield } from "react-icons/fi";
+import LoadingSpinner from "../Shared/LoadingSpinner";
 
 const ManageDecorators = () => {
   const [users, setUsers] = useState([]);
@@ -11,33 +12,25 @@ const ManageDecorators = () => {
   const [showRequestModal, setShowRequestModal] = useState(false);
   const [selectedUserId, setSelectedUserId] = useState(null);
 
-  // Sample decorator requests (hardcoded as per requirement)
-  const [decoratorRequests, setDecoratorRequests] = useState([
-    {
-      id: 1,
-      name: "John Doe",
-      email: "john@example.com",
-      photo: "https://i.pravatar.cc/150?img=1",
-      requestDate: "2024-01-10"
-    },
-    {
-      id: 2,
-      name: "Jane Smith",
-      email: "jane@example.com",
-      photo: "https://i.pravatar.cc/150?img=2",
-      requestDate: "2024-01-09"
+  const [request, setRequest] = useState([]);
+  const [decoratorRequests, setDecoratorRequests] = useState([]);
+
+  const getRequests = async () => {
+    try {
+      const response = await axios.get("http://localhost:3000/requests");
+      setRequest(response.data);
+    } catch (error) {
+      console.error("Error fetching users:", error);
     }
-  ]);
-
-  // Fetch users
+  };
   useEffect(() => {
-    fetchUsers();
+    getRequests();
   }, []);
-
-  // Filter users when search or role changes
   useEffect(() => {
-    filterUsers();
-  }, [searchTerm, selectedRole, users]);
+    setDecoratorRequests(request);
+  }, [request]);
+
+
 
   const fetchUsers = async () => {
     try {
@@ -50,37 +43,52 @@ const ManageDecorators = () => {
       setLoading(false);
     }
   };
+  // Fetch users
+  useEffect(() => {
+    fetchUsers();
+  }, []);
+
 
   const filterUsers = () => {
     let filtered = users;
 
     // Filter by role
     if (selectedRole !== "All User") {
-      filtered = filtered.filter(user => 
-        selectedRole.toLowerCase() === user.role.toLowerCase()
+      filtered = filtered.filter(
+        (user) => selectedRole.toLowerCase() === user.role.toLowerCase()
       );
     }
     // Filter by search term
     if (searchTerm.trim() !== "") {
       const term = searchTerm.toLowerCase();
-      filtered = filtered.filter(user =>
-        user.name.toLowerCase().includes(term) ||
-        user.email.toLowerCase().includes(term)
+      filtered = filtered.filter(
+        (user) =>
+          user.name.toLowerCase().includes(term) ||
+          user.email.toLowerCase().includes(term)
       );
     }
     setFilteredUsers(filtered);
   };
 
+  // Filter users when search or role changes
+  useEffect(() => {
+    filterUsers();
+  }, [searchTerm, selectedRole, users]);
+
   const handleRoleChange = async (userId, newRole) => {
     try {
       // API call to update role
-      await axios.put(`http://localhost:3000/update-role/${userId}`, { role: newRole });
-      
+      await axios.put(`http://localhost:3000/update-role/${userId}`, {
+        role: newRole,
+      });
+
       // Update local state
-      setUsers(users.map(user =>
-        user._id === userId ? { ...user, role: newRole } : user
-      ));
-      
+      setUsers(
+        users.map((user) =>
+          user._id === userId ? { ...user, role: newRole } : user
+        )
+      );
+
       alert("Role updated successfully!");
     } catch (error) {
       console.error("Error updating role:", error);
@@ -90,9 +98,11 @@ const ManageDecorators = () => {
 
   const handleRequestAction = (requestId, action) => {
     // Remove request from list
-    setDecoratorRequests(decoratorRequests.filter(req => req.id !== requestId));
-    
-    if (action === 'accept') {
+    setDecoratorRequests(
+      decoratorRequests.filter((req) => req.id !== requestId)
+    );
+
+    if (action === "accept") {
       alert("Request accepted!");
       // Here you would call API to update user role to 'decorator'
     } else {
@@ -102,17 +112,18 @@ const ManageDecorators = () => {
 
   const getRoleIcon = (role) => {
     switch (role) {
-      case 'admin': return <FiShield className="text-red-500" />;
-      case 'decorator': return <FiUserCheck className="text-green-500" />;
-      default: return <FiUser className="text-blue-500" />;
+      case "admin":
+        return <FiShield className="text-red-500" />;
+      case "decorator":
+        return <FiUserCheck className="text-green-500" />;
+      default:
+        return <FiUser className="text-blue-500" />;
     }
   };
 
   if (loading) {
     return (
-      <div className="min-h-screen w-full bg-base-200 rounded-2xl p-6 flex justify-center items-center">
-        <div className="loading loading-spinner loading-lg"></div>
-      </div>
+      <LoadingSpinner></LoadingSpinner>
     );
   }
 
@@ -122,7 +133,7 @@ const ManageDecorators = () => {
       <div className="border-b pb-4 md:pb-6">
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
           <h1 className="font-bold text-2xl">User Management</h1>
-          
+
           <div className="flex flex-col md:flex-row gap-3 w-full md:w-auto">
             {/* Search Bar */}
             <div className="relative w-full md:w-64">
@@ -201,7 +212,7 @@ const ManageDecorators = () => {
                       {getRoleIcon(user.role)} {user.role}
                     </span>
                   </div>
-                  
+
                   <select
                     value={user.role}
                     onChange={(e) => handleRoleChange(user._id, e.target.value)}
@@ -217,7 +228,7 @@ const ManageDecorators = () => {
                 <div className="hidden md:grid md:col-span-1 text-center py-3">
                   {index + 1}
                 </div>
-                
+
                 <div className="hidden md:grid md:col-span-2 justify-center py-3">
                   <img
                     className="h-12 w-12 rounded-full border"
@@ -225,22 +236,22 @@ const ManageDecorators = () => {
                     alt={user.name}
                   />
                 </div>
-                
+
                 <div className="hidden md:grid md:col-span-3 items-center py-3">
                   {user.name}
                 </div>
-                
+
                 <div className="hidden md:grid md:col-span-3 items-center py-3">
                   {user.email}
                 </div>
-                
+
                 <div className="hidden md:grid md:col-span-1 items-center justify-center py-3">
                   <div className="flex items-center gap-1">
                     {getRoleIcon(user.role)}
                     <span className="capitalize">{user.role}</span>
                   </div>
                 </div>
-                
+
                 <div className="hidden md:grid md:col-span-2 items-center justify-center py-3">
                   <select
                     value={user.role}
@@ -263,15 +274,16 @@ const ManageDecorators = () => {
         <div className="modal modal-open">
           <div className="modal-box max-w-2xl">
             <h3 className="font-bold text-lg mb-4">Decorator Requests</h3>
-            
+
             {decoratorRequests.length === 0 ? (
-              <div className="text-center py-8">
-                No pending requests
-              </div>
+              <div className="text-center py-8">No pending requests</div>
             ) : (
               <div className="space-y-3">
-                {decoratorRequests.map(request => (
-                  <div key={request.id} className="flex items-center justify-between bg-base-200 p-3 rounded-lg">
+                {decoratorRequests.map((request) => (
+                  <div
+                    key={request._id}
+                    className="flex items-center justify-between bg-base-200 p-3 rounded-lg"
+                  >
                     <div className="flex items-center gap-3">
                       <img
                         className="h-10 w-10 rounded-full"
@@ -281,19 +293,25 @@ const ManageDecorators = () => {
                       <div>
                         <p className="font-semibold">{request.name}</p>
                         <p className="text-sm opacity-70">{request.email}</p>
-                        <p className="text-xs opacity-50">Requested on: {request.requestDate}</p>
+                        <p className="text-xs opacity-50">
+                          Requested on: {request.requestDate}
+                        </p>
                       </div>
                     </div>
-                    
+
                     <div className="flex gap-2">
                       <button
-                        onClick={() => handleRequestAction(request.id, 'accept')}
+                        onClick={() =>
+                          handleRequestAction(request.id, "accept")
+                        }
                         className="btn btn-sm btn-success"
                       >
                         Accept
                       </button>
                       <button
-                        onClick={() => handleRequestAction(request.id, 'reject')}
+                        onClick={() =>
+                          handleRequestAction(request.id, "reject")
+                        }
                         className="btn btn-sm btn-error"
                       >
                         Reject
@@ -303,7 +321,7 @@ const ManageDecorators = () => {
                 ))}
               </div>
             )}
-            
+
             <div className="modal-action">
               <button
                 onClick={() => setShowRequestModal(false)}

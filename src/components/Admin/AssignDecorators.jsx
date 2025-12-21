@@ -60,12 +60,10 @@ export default function AssignDecoratorPage() {
         decoretorName: decorator.name,
         decoretorEmail: decorator.email,
       };
-
       await axios.patch(
-        `http://localhost:3000/payments/${serviceId}/assign-decorator`,
+        `http://localhost:3000/add-decorator/${serviceId}`,
         updateData
       );
-
       setAssigned((prev) => ({
         ...prev,
         [serviceId]: { name: decorator.name, email: decorator.email },

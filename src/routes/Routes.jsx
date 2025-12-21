@@ -20,6 +20,7 @@ import UserBookedData from "../components/User/UserBookedData ";
 import PaymentSuccess from "../components/User/PaymentSuccess";
 import PaymentStatus from "../components/User/PaymentStatus";
 import ServiceManagement from "../components/Admin/ServiceManagement";
+import RevenueMonitoring from "../components/Admin/RevenueMonitoring";
 
 export const router = createBrowserRouter([
   {
@@ -118,7 +119,7 @@ export const router = createBrowserRouter([
       },
       {
         path: "/dashboard/admin-revenue",
-        element: <Dashboard />,
+        element: <RevenueMonitoring />,
       },
       {
         path: "/dashboard/admin-analytics",
