@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { FiSearch, FiUser, FiUserCheck, FiShield } from "react-icons/fi";
 import LoadingSpinner from "../Shared/LoadingSpinner";
+const API_URL = import.meta.env.VITE_API_URL;
 
 const ManageDecorators = () => {
   const [users, setUsers] = useState([]);
@@ -11,13 +12,13 @@ const ManageDecorators = () => {
   const [selectedRole, setSelectedRole] = useState("All User");
   const [showRequestModal, setShowRequestModal] = useState(false);
   const [selectedUserId, setSelectedUserId] = useState(null);
-// console.log();
+  // console.log();
   const [request, setRequest] = useState([]);
   const [decoratorRequests, setDecoratorRequests] = useState([]);
 
   const getRequests = async () => {
     try {
-      const response = await axios.get("http://localhost:3000/requests");
+      const response = await axios.get(`${API_URL}/requests`);
       setRequest(response.data);
     } catch (error) {
       console.error("Error fetching users:", error);
@@ -30,11 +31,9 @@ const ManageDecorators = () => {
     setDecoratorRequests(request);
   }, [request]);
 
-
-
   const fetchUsers = async () => {
     try {
-      const response = await axios.get("http://localhost:3000/all-users");
+      const response = await axios.get(`${API_URL}/all-users`);
       setUsers(response.data);
       setFilteredUsers(response.data);
       setLoading(false);
@@ -47,7 +46,6 @@ const ManageDecorators = () => {
   useEffect(() => {
     fetchUsers();
   }, []);
-
 
   const filterUsers = () => {
     let filtered = users;
@@ -78,7 +76,7 @@ const ManageDecorators = () => {
   const handleRoleChange = async (userEmail, newRole) => {
     try {
       // API call to update role
-      await axios.put(`http://localhost:3000/update-role/${userEmail}`, {
+      await axios.put(`${API_URL}/update-role/${userEmail}`, {
         role: newRole,
       });
 
@@ -97,9 +95,9 @@ const ManageDecorators = () => {
   };
 
   const handleReject = async (id) => {
-    await axios.delete(`http://localhost:3000/delete-request/${id}`)
-  }
-  
+    await axios.delete(`${API_URL}/delete-request/${id}`);
+  };
+
   // console.log(decoratorRequests);
   const handleRequestAction = (requestId, requestEmail, action) => {
     // Remove request from list
@@ -108,11 +106,11 @@ const ManageDecorators = () => {
     );
 
     if (action === "accept") {
-      handleRoleChange(requestEmail, 'decorator')
-      handleReject(requestId)
+      handleRoleChange(requestEmail, "decorator");
+      handleReject(requestId);
     } else {
       alert("Request rejected!");
-      handleReject(requestId)
+      handleReject(requestId);
     }
   };
 
@@ -128,9 +126,7 @@ const ManageDecorators = () => {
   };
 
   if (loading) {
-    return (
-      <LoadingSpinner></LoadingSpinner>
-    );
+    return <LoadingSpinner></LoadingSpinner>;
   }
 
   return (
@@ -261,7 +257,9 @@ const ManageDecorators = () => {
                 <div className="hidden md:grid md:col-span-2 items-center justify-center py-3">
                   <select
                     value={user.role}
-                    onChange={(e) => handleRoleChange(user.email, e.target.value)}
+                    onChange={(e) =>
+                      handleRoleChange(user.email, e.target.value)
+                    }
                     className="select select-bordered w-40"
                   >
                     <option value="user">User</option>
@@ -308,7 +306,11 @@ const ManageDecorators = () => {
                     <div className="flex gap-2">
                       <button
                         onClick={() =>
-                          handleRequestAction(request._id, request.email, "accept")
+                          handleRequestAction(
+                            request._id,
+                            request.email,
+                            "accept"
+                          )
                         }
                         className="btn btn-sm btn-success"
                       >
@@ -316,7 +318,11 @@ const ManageDecorators = () => {
                       </button>
                       <button
                         onClick={() =>
-                          handleRequestAction(request._id, request.email, "reject")
+                          handleRequestAction(
+                            request._id,
+                            request.email,
+                            "reject"
+                          )
                         }
                         className="btn btn-sm btn-error"
                       >

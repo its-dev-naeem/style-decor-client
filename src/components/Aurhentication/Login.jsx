@@ -1,5 +1,5 @@
 import React, { useState, useContext, useEffect } from "react";
-import { Link, useNavigate } from "react-router";
+import { Link, useLocation, useNavigate } from "react-router";
 import {
   FaEnvelope,
   FaLock,
@@ -11,6 +11,7 @@ import {
 import { AuthContext } from "../../providers/AuthContext";
 import { useForm } from "react-hook-form";
 import { saveOrUpdateUser } from "../../utils";
+
 
 const Login = () => {
   const navigate = useNavigate();
@@ -49,7 +50,7 @@ const Login = () => {
       }
 
       alert("Login successful!");
-      navigate("/dashboard");
+      navigate('/');
     } catch (error) {
       setError("general", {
         type: "manual",
@@ -69,7 +70,7 @@ const Login = () => {
         email: user?.email,
         imageURL: user?.photoURL,
       });
-      navigate("/dashboard");
+      navigate('/');
     } catch (error) {
       alert(error.message);
     }

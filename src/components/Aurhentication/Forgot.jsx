@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { Link, useNavigate } from 'react-router';
 import { FaEnvelope, FaArrowLeft, FaCheckCircle, FaArrowRight, FaLock } from 'react-icons/fa';
+import { AuthContext } from '../../providers/AuthContext';
 
 const Forgot = () => {
   const navigate = useNavigate();
@@ -8,6 +9,7 @@ const Forgot = () => {
   const [error, setError] = useState('');
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const { forgotPassword } = useContext(AuthContext);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -26,7 +28,8 @@ const Forgot = () => {
     
     // Simulate API call
     setTimeout(() => {
-      console.log('Password reset requested for:', email);
+      forgotPassword(email)
+      // console.log('Password reset requested for:', email);
       setIsSubmitting(false);
       setIsSubmitted(true);
     }, 1500);

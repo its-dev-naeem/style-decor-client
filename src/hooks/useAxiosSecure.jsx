@@ -1,52 +1,52 @@
-import { useContext, useEffect } from 'react'
-import { useNavigate } from 'react-router'
-import axios from 'axios'
-import { AuthContext } from '../providers/AuthContext'
-
+import { useContext, useEffect } from "react";
+import { useNavigate } from "react-router";
+import axios from "axios";
+import { AuthContext } from "../providers/AuthContext";
+const API_URL = import.meta.env.VITE_API_URL;
 
 const axiosInstance = axios.create({
-  baseURL: 'http://localhost:3000',
+  baseURL: `${API_URL}`,
   withCredentials: true,
-})
+});
 
 const useAxiosSecure = () => {
-  const { user, logOut, loading } = useContext(AuthContext)
-  const navigate = useNavigate()
+  const { user, logOut, loading } = useContext(AuthContext);
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (!loading && user?.accessToken) {
       // Add request interceptor
       const requestInterceptor = axiosInstance.interceptors.request.use(
-        config => {
-          config.headers.Authorization = `Bearer ${user.accessToken}`
-          return config
+        (config) => {
+          config.headers.Authorization = `Bearer ${user.accessToken}`;
+          return config;
         }
-      )
+      );
 
       // Add response interceptor
       const responseInterceptor = axiosInstance.interceptors.response.use(
-        res => res,
-        err => {
+        (res) => res,
+        (err) => {
           if (err?.response?.status === 401 || err?.response?.status === 403) {
             logOut()
               .then(() => {
-                console.log('Logged out successfully.')
+                console.log("Logged out successfully.");
               })
-              .catch(console.error)
-            navigate('/login')
+              .catch(console.error);
+            navigate("/login");
           }
-          return Promise.reject(err)
+          return Promise.reject(err);
         }
-      )
+      );
 
       // Cleanup to prevent multiple interceptors on re-renders
       return () => {
-        axiosInstance.interceptors.request.eject(requestInterceptor)
-        axiosInstance.interceptors.response.eject(responseInterceptor)
-      }
+        axiosInstance.interceptors.request.eject(requestInterceptor);
+        axiosInstance.interceptors.response.eject(responseInterceptor);
+      };
     }
-  }, [user, loading, logOut, navigate])
+  }, [user, loading, logOut, navigate]);
 
-  return axiosInstance
-}
-export default useAxiosSecure
+  return axiosInstance;
+};
+export default useAxiosSecure;

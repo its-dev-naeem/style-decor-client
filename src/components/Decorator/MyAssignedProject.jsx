@@ -1,7 +1,18 @@
 import axios from "axios";
 import React, { useState, useEffect, useContext } from "react";
 import { AuthContext } from "../../providers/AuthContext";
-import { FiUser, FiMail, FiMapPin, FiClock, FiDollarSign, FiPackage, FiCheckCircle, FiLoader } from "react-icons/fi";
+import {
+  FiUser,
+  FiMail,
+  FiMapPin,
+  FiClock,
+  FiDollarSign,
+  FiPackage,
+  FiCheckCircle,
+  FiLoader,
+} from "react-icons/fi";
+import LoadingSpinner from "../Shared/LoadingSpinner";
+const API_URL = import.meta.env.VITE_API_URL;
 
 const MyAssignedProject = () => {
   const { user } = useContext(AuthContext);
@@ -14,7 +25,9 @@ const MyAssignedProject = () => {
 
   const fetchProjects = async () => {
     try {
-      const response = await axios.get(`http://localhost:3000/payment/decorator/${user?.email}`);
+      const response = await axios.get(
+        `${API_URL}/payment/decorator/${user?.email}`
+      );
       setProjects(response.data);
     } catch (error) {
       console.error("Error:", error);
@@ -25,18 +38,17 @@ const MyAssignedProject = () => {
 
   const getStatusColor = (status) => {
     switch (status) {
-      case "Completed": return "badge-success";
-      case "In Progress": return "badge-info";
-      default: return "badge-warning";
+      case "Completed":
+        return "badge-success";
+      case "In Progress":
+        return "badge-info";
+      default:
+        return "badge-warning";
     }
   };
 
   if (loading) {
-    return (
-      <div className="flex justify-center items-center min-h-screen">
-        <div className="loading loading-spinner loading-lg"></div>
-      </div>
-    );
+    return <LoadingSpinner></LoadingSpinner>;
   }
 
   return (
@@ -44,27 +56,43 @@ const MyAssignedProject = () => {
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <div className="mb-8">
-          <h1 className="text-2xl md:text-3xl font-bold text-center">My Assigned Projects</h1>
-          <p className="text-gray-600 mt-2 text-center">Track all your assigned decoration projects</p>
+          <h1 className="text-2xl md:text-3xl font-bold text-center">
+            My Assigned Projects
+          </h1>
+          <p className="text-gray-600 mt-2 text-center">
+            Track all your assigned decoration projects
+          </p>
         </div>
 
         {/* Mobile View - Improved */}
         <div className="md:hidden">
           {projects.length === 0 ? (
             <div className="card bg-base-100 shadow text-center py-12">
-              <div className="text-gray-500 text-lg">No projects assigned yet</div>
+              <div className="text-gray-500 text-lg">
+                No projects assigned yet
+              </div>
             </div>
           ) : (
             <div className="space-y-4">
-              {projects.map(project => (
+              {projects.map((project) => (
                 <div key={project._id} className="card bg-base-100 shadow">
                   <div className="card-body">
                     {/* Service Name & Status Row */}
                     <div className="flex flex-col items-center mb-4 text-center">
-                      <h3 className="font-bold text-lg mb-2">{project.serviceName}</h3>
-                      <span className={`badge ${getStatusColor(project.workStatus)}`}>
-                        {project.workStatus === "Completed" && <FiCheckCircle className="inline mr-1" />}
-                        {project.workStatus === "In Progress" && <FiLoader className="inline mr-1 animate-spin" />}
+                      <h3 className="font-bold text-lg mb-2">
+                        {project.serviceName}
+                      </h3>
+                      <span
+                        className={`badge ${getStatusColor(
+                          project.workStatus
+                        )}`}
+                      >
+                        {project.workStatus === "Completed" && (
+                          <FiCheckCircle className="inline mr-1" />
+                        )}
+                        {project.workStatus === "In Progress" && (
+                          <FiLoader className="inline mr-1 animate-spin" />
+                        )}
                         {project.workStatus || "Pending"}
                       </span>
                     </div>
@@ -78,8 +106,12 @@ const MyAssignedProject = () => {
                           </div>
                         </div>
                         <div>
-                          <div className="font-bold text-lg">{project.userName}</div>
-                          <div className="text-gray-500 text-sm mt-1">{project.userEmail}</div>
+                          <div className="font-bold text-lg">
+                            {project.userName}
+                          </div>
+                          <div className="text-gray-500 text-sm mt-1">
+                            {project.userEmail}
+                          </div>
                         </div>
                       </div>
                     </div>
@@ -94,7 +126,9 @@ const MyAssignedProject = () => {
                       <div className="bg-base-300 rounded-lg p-3">
                         <FiClock className="mx-auto text-lg mb-1" />
                         <div className="text-sm text-gray-500">Timeline</div>
-                        <div className="font-medium">{project.time || "Flexible"}</div>
+                        <div className="font-medium">
+                          {project.time || "Flexible"}
+                        </div>
                       </div>
                     </div>
 
@@ -103,7 +137,9 @@ const MyAssignedProject = () => {
                       <div className="bg-base-300 rounded-lg p-3">
                         <FiDollarSign className="mx-auto text-lg mb-1 text-green-500" />
                         <div className="text-sm text-gray-500">Price</div>
-                        <div className="font-bold text-lg">BDT {project.price}</div>
+                        <div className="font-bold text-lg">
+                          BDT {project.price}
+                        </div>
                       </div>
                       <div className="bg-base-300 rounded-lg p-3">
                         <FiPackage className="mx-auto text-lg mb-1 text-blue-500" />
@@ -139,61 +175,84 @@ const MyAssignedProject = () => {
                     {projects.length === 0 ? (
                       <tr>
                         <td colSpan="7" className="text-center py-12">
-                          <div className="text-gray-500 text-lg">No projects assigned</div>
+                          <div className="text-gray-500 text-lg">
+                            No projects assigned
+                          </div>
                         </td>
                       </tr>
                     ) : (
-                      projects.map(project => (
-                        <tr key={project._id} className="hover:bg-base-200 border-b border-base-300">
+                      projects.map((project) => (
+                        <tr
+                          key={project._id}
+                          className="hover:bg-base-200 border-b border-base-300"
+                        >
                           <td className="py-6 px-6">
                             <div className="flex flex-col items-center text-center">
                               <div>
-                                <div className="font-bold">{project.userName}</div>
+                                <div className="font-bold">
+                                  {project.userName}
+                                </div>
                                 <div className="text-sm text-gray-500 truncate max-w-[200px]">
                                   {project.userEmail}
                                 </div>
                               </div>
                             </div>
                           </td>
-                          
+
                           <td className="py-6 px-6 text-center">
                             <div className="flex flex-col items-center">
                               <FiMapPin className="mb-1 text-gray-400" />
                               <span>{project.location}</span>
                             </div>
                           </td>
-                          
+
                           <td className="py-6 px-6 text-center">
-                            <div className="font-semibold">{project.serviceName}</div>
-                            {project.category && <div className="text-sm text-gray-500">{project.category}</div>}
+                            <div className="font-semibold">
+                              {project.serviceName}
+                            </div>
+                            {project.category && (
+                              <div className="text-sm text-gray-500">
+                                {project.category}
+                              </div>
+                            )}
                           </td>
-                          
+
                           <td className="py-6 px-6 text-center">
                             <div className="flex flex-col items-center">
                               <FiDollarSign className="mb-1 text-green-500" />
-                              <span className="font-bold">BDT {project.price}</span>
+                              <span className="font-bold">
+                                BDT {project.price}
+                              </span>
                             </div>
                           </td>
-                          
+
                           <td className="py-6 px-6 text-center">
                             <div className="flex flex-col items-center">
                               <FiPackage className="mb-1 text-blue-500" />
                               <span>{project.unit}</span>
                             </div>
                           </td>
-                          
+
                           <td className="py-6 px-6 text-center">
                             <div className="flex flex-col items-center">
                               <FiClock className="mb-1 text-gray-400" />
                               <span>{project.deliveryTime || "Flexible"}</span>
                             </div>
                           </td>
-                          
+
                           <td className="py-6 px-6 text-center">
                             <div className="flex justify-center">
-                              <span className={`badge ${getStatusColor(project.workStatus)} badge-lg px-4 py-2`}>
-                                {project.workStatus === "Completed" && <FiCheckCircle className="inline mr-1" />}
-                                {project.workStatus === "In Progress" && <FiLoader className="inline mr-1 animate-spin" />}
+                              <span
+                                className={`badge ${getStatusColor(
+                                  project.workStatus
+                                )} badge-lg px-4 py-2`}
+                              >
+                                {project.workStatus === "Completed" && (
+                                  <FiCheckCircle className="inline mr-1" />
+                                )}
+                                {project.workStatus === "In Progress" && (
+                                  <FiLoader className="inline mr-1 animate-spin" />
+                                )}
                                 {project.workStatus || "Pending"}
                               </span>
                             </div>
@@ -218,24 +277,27 @@ const MyAssignedProject = () => {
               <div className="stat-title">Total Projects</div>
               <div className="stat-value text-2xl">{projects.length}</div>
             </div>
-            
+
             <div className="stat bg-base-100 rounded-lg shadow p-6 text-center">
               <div className="stat-figure text-success mx-auto mb-3">
                 <FiCheckCircle className="text-3xl" />
               </div>
               <div className="stat-title">Completed</div>
               <div className="stat-value text-2xl">
-                {projects.filter(p => p.workStatus === "Completed").length}
+                {projects.filter((p) => p.workStatus === "Completed").length}
               </div>
             </div>
-            
+
             <div className="stat bg-base-100 rounded-lg shadow p-6 text-center">
               <div className="stat-figure text-info mx-auto mb-3">
                 <FiDollarSign className="text-3xl" />
               </div>
               <div className="stat-title">Total Value</div>
               <div className="stat-value text-2xl">
-                BDT {projects.reduce((sum, p) => sum + parseFloat(p.price || 0), 0).toFixed(2)}
+                BDT{" "}
+                {projects
+                  .reduce((sum, p) => sum + parseFloat(p.price || 0), 0)
+                  .toFixed(2)}
               </div>
             </div>
           </div>

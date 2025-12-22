@@ -8,9 +8,11 @@ import {
   FaMoneyBill,
   FaInfoCircle,
   FaTrash,
-  FaSearch
+  FaSearch,
 } from "react-icons/fa";
 import { MdEmail, MdCategory } from "react-icons/md";
+import LoadingSpinner from "../Shared/LoadingSpinner";
+const API_URL = import.meta.env.VITE_API_URL;
 
 const ManageBookings = () => {
   const [bookings, setBookings] = useState([]);
@@ -23,7 +25,7 @@ const ManageBookings = () => {
   useEffect(() => {
     const fetchBookings = async () => {
       try {
-        const response = await axios.get("http://localhost:3000/booking-data");
+        const response = await axios.get(`${API_URL}/booking-data`);
         setBookings(response.data);
       } catch (error) {
         console.error("Error fetching bookings:", error);
@@ -50,11 +52,13 @@ const ManageBookings = () => {
 
   // CANCEL BOOKING HANDLER
   const handleCancel = async (id) => {
-    const confirmDelete = confirm("Are you sure you want to cancel this booking?");
+    const confirmDelete = confirm(
+      "Are you sure you want to cancel this booking?"
+    );
     if (!confirmDelete) return;
 
     try {
-      await axios.delete(`http://localhost:3000/booking-data/${id}`);
+      await axios.delete(`${API_URL}/booking-data/${id}`);
       setBookings(bookings.filter((b) => b._id !== id));
     } catch (error) {
       console.error("Error canceling booking:", error);
@@ -74,16 +78,18 @@ const ManageBookings = () => {
   });
 
   // COLLECT UNIQUE CATEGORIES
-  const categories = ["All", ...new Set(bookings.map((b) => b.service.caterory))];
+  const categories = [
+    "All",
+    ...new Set(bookings.map((b) => b.service.caterory)),
+  ];
 
   if (loading) {
-    return <div>Loading...</div>;
+    return <LoadingSpinner></LoadingSpinner>;
   }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 p-4 md:p-8">
       <div className="max-w-7xl mx-auto">
-        
         {/* Header */}
         <div className="mb-8">
           <h1 className="text-3xl md:text-4xl font-bold text-gray-800 mb-2">
@@ -97,7 +103,6 @@ const ManageBookings = () => {
 
         {/* Search + Filter Row */}
         <div className="flex flex-col md:flex-row items-center gap-4 mb-6">
-
           {/* Search */}
           <div className="w-full md:w-1/2 relative">
             <FaSearch className="absolute left-3 top-3 text-gray-400" />
@@ -170,7 +175,9 @@ const ManageBookings = () => {
                             </div>
                           </div>
                           <div>
-                            <h4 className="font-semibold">{booking.user.name}</h4>
+                            <h4 className="font-semibold">
+                              {booking.user.name}
+                            </h4>
                             <div className="flex items-center gap-1 text-sm text-gray-500">
                               <MdEmail />
                               {booking.user.email}
@@ -224,7 +231,6 @@ const ManageBookings = () => {
           {filteredBookings.map((booking) => (
             <div key={booking._id} className="card bg-base-100 shadow-xl">
               <div className="card-body">
-
                 {/* Top Row (service + status) */}
                 <div className="flex justify-between items-start">
                   <div className="flex items-center gap-3">
@@ -234,7 +240,9 @@ const ManageBookings = () => {
                       </div>
                     </div>
                     <div>
-                      <h2 className="font-bold text-lg">{booking.service.name}</h2>
+                      <h2 className="font-bold text-lg">
+                        {booking.service.name}
+                      </h2>
                       <div className="badge badge-neutral mt-1">
                         {booking.service.caterory}
                       </div>
@@ -259,10 +267,15 @@ const ManageBookings = () => {
 
                 {/* Provider */}
                 <div className="flex items-center gap-3">
-                  <img className="w-12 h-12 rounded-full" src={booking.provider.photo} />
+                  <img
+                    className="w-12 h-12 rounded-full"
+                    src={booking.provider.photo}
+                  />
                   <div>
                     <p className="font-semibold">{booking.provider.name}</p>
-                    <p className="text-sm text-gray-500">{booking.provider.email}</p>
+                    <p className="text-sm text-gray-500">
+                      {booking.provider.email}
+                    </p>
                   </div>
                 </div>
 
@@ -285,12 +298,10 @@ const ManageBookings = () => {
                 >
                   <FaTrash /> Cancel Booking
                 </button>
-
               </div>
             </div>
           ))}
         </div>
-
       </div>
     </div>
   );

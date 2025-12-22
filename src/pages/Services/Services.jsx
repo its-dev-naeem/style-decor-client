@@ -2,6 +2,7 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { FaStar, FaEye } from "react-icons/fa";
 import { Link } from "react-router";
+const API_URL = import.meta.env.VITE_API_URL;
 
 const Services = () => {
   const [data, setData] = useState([]);
@@ -10,7 +11,7 @@ const Services = () => {
   useEffect(() => {
     const loadData = async () => {
       try {
-        const res = await axios.get("http://localhost:3000/services");
+        const res = await axios.get(`${API_URL}/services`);
         setData(res.data.slice(0, 6));
       } catch (error) {
         console.log(error);

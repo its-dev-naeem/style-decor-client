@@ -12,6 +12,8 @@ import { MdEmail, MdCategory } from "react-icons/md";
 import { AuthContext } from "../../providers/AuthContext";
 import { useForm } from "react-hook-form";
 import { Link } from "react-router";
+import LoadingSpinner from "../Shared/LoadingSpinner";
+const API_URL = import.meta.env.VITE_API_URL;
 
 const UserBookedData = () => {
   const { user } = useContext(AuthContext);
@@ -23,7 +25,7 @@ const UserBookedData = () => {
   const { register, watch } = useForm({});
   const quantity = watch("quantity", 1);
   const location = watch("location", "Dhaka");
-  const deliveryTime = watch("deliveryTime",);
+  const deliveryTime = watch("deliveryTime");
   const workStatus = "Pending";
 
   //   console.log(quantity);
@@ -37,9 +39,7 @@ const UserBookedData = () => {
 
   const fetchBookings = async () => {
     try {
-      const response = await axios.get(
-        `http://localhost:3000/booking-data/${uid}`
-      );
+      const response = await axios.get(`${API_URL}/booking-data/${uid}`);
       setBookings(response.data);
     } catch (error) {
       console.error("Error fetching bookings:", error);
@@ -58,7 +58,7 @@ const UserBookedData = () => {
     fetchBookings();
 
     try {
-      await axios.delete(`http://localhost:3000/booking-data/${bookingId}`);
+      await axios.delete(`${API_URL}/booking-data/${bookingId}`);
     } catch (error) {
       console.error("Error canceling booking:", error);
     }
@@ -79,7 +79,7 @@ const UserBookedData = () => {
     setShowPayModal(false);
     try {
       const result = await axios.post(
-        `http://localhost:3000/create-checkout-session`,
+        `${API_URL}/create-checkout-session`,
         payInfo
       );
       const redirectUrl = result.data.url;
@@ -103,24 +103,7 @@ const UserBookedData = () => {
   };
 
   if (loading) {
-    return (
-      <div className="min-h-screen bg-gray-50 p-4 md:p-8">
-        <div className="max-w-7xl mx-auto">
-          <h1 className="text-3xl font-bold mb-8">My Bookings</h1>
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            {[...Array(4)].map((_, i) => (
-              <div key={i} className="card bg-white shadow rounded-lg p-6">
-                <div className="space-y-4">
-                  <div className="h-6 bg-gray-200 rounded w-3/4 animate-pulse"></div>
-                  <div className="h-4 bg-gray-200 rounded w-1/2 animate-pulse"></div>
-                  <div className="h-4 bg-gray-200 rounded w-2/3 animate-pulse"></div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </div>
-    );
+    return <LoadingSpinner></LoadingSpinner>;
   }
 
   return (

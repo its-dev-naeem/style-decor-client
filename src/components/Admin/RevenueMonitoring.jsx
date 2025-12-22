@@ -10,6 +10,8 @@ import {
 } from "react-icons/fi";
 import { AuthContext } from "../../providers/AuthContext";
 import { Link } from "react-router";
+import LoadingSpinner from "../Shared/LoadingSpinner";
+const API_URL = import.meta.env.VITE_API_URL;
 
 const RevenueMonitoring = () => {
   const { user } = useContext(AuthContext);
@@ -32,7 +34,7 @@ const RevenueMonitoring = () => {
 
   const fetchOrders = async () => {
     try {
-      const response = await axios.get("http://localhost:3000/payments");
+      const response = await axios.get(`${API_URL}/payments`);
       const userOrders = response.data;
       setOrders(userOrders);
       setFilteredOrders(userOrders);
@@ -67,11 +69,7 @@ const RevenueMonitoring = () => {
   };
 
   if (loading) {
-    return (
-      <div className="min-h-screen bg-base-200 p-6 flex justify-center items-center">
-        <div className="loading loading-spinner loading-lg"></div>
-      </div>
-    );
+    return <LoadingSpinner></LoadingSpinner>;
   }
 
   return (
@@ -225,7 +223,10 @@ const RevenueMonitoring = () => {
                         </td>
                         <td className="font-bold">BDT{order.price}</td>
                         <td>
-                          <Link to='/dashboard/admin-assign' className="btn btn-sm btn-outline">
+                          <Link
+                            to="/dashboard/admin-assign"
+                            className="btn btn-sm btn-outline"
+                          >
                             View Details
                           </Link>
                         </td>

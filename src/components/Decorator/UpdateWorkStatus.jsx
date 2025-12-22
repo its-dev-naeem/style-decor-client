@@ -7,6 +7,8 @@ import {
   FiCheckCircle,
   FiRefreshCw,
 } from "react-icons/fi";
+import LoadingSpinner from "../Shared/LoadingSpinner";
+const API_URL = import.meta.env.VITE_API_URL;
 
 const UpdateWorkStatus = () => {
   const { user } = useContext(AuthContext);
@@ -21,7 +23,7 @@ const UpdateWorkStatus = () => {
   const fetchProjects = async () => {
     try {
       const response = await axios.get(
-        `http://localhost:3000/payment/decorator/${user.email}`
+        `${API_URL}/payment/decorator/${user.email}`
       );
       setProjects(response.data);
       setLoading(false);
@@ -34,7 +36,7 @@ const UpdateWorkStatus = () => {
   const handleStatusUpdate = async (projectId, newStatus) => {
     setUpdating(true);
     try {
-      await axios.patch(`http://localhost:3000/decorator-update/${projectId}`, {
+      await axios.patch(`${API_URL}/decorator-update/${projectId}`, {
         workStatus: newStatus,
       });
 
@@ -64,12 +66,7 @@ const UpdateWorkStatus = () => {
     }
   };
 
-  if (loading)
-    return (
-      <div className="flex justify-center items-center min-h-screen">
-        <div className="loading loading-spinner loading-lg"></div>
-      </div>
-    );
+  if (loading) return <LoadingSpinner></LoadingSpinner>;
 
   return (
     <div className="min-h-screen bg-base-200 p-4 md:p-6">

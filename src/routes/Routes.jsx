@@ -42,6 +42,7 @@ import TodaysSchedule from "../components/Decorator/TodaysSchedule";
 import UpdateWorkStatus from "../components/Decorator/UpdateWorkStatus";
 import EarningsSummary from "../components/Decorator/EarningsSummary";
 import UserBookedData from "../components/User/UserBookedData ";
+import Coverage from "../pages/Coverage";
 
 export const router = createBrowserRouter([
   {
@@ -69,7 +70,7 @@ export const router = createBrowserRouter([
       },
       { path: "/about", element: <About /> },
       { path: "/contact", element: <Contact /> },
-      { path: "/coverage", element: <Contact /> },
+      { path: "/coverage", element: <Coverage /> },
       { path: "/login", element: <Login /> },
       { path: "/signup", element: <Signup /> },
       { path: "/forgot-password", element: <Forgot /> },

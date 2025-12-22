@@ -77,7 +77,7 @@ const Signup = () => {
       });
 
       alert("Registration successful!");
-      navigate("/dashboard");
+      navigate("/");
     } catch (error) {
       alert("Registration failed: " + error.message);
     }
@@ -94,6 +94,7 @@ const Signup = () => {
         email: user?.email,
         imageURL: user?.photoURL,
       });
+      navigate('/')
     } catch (error) {
       alert(error.message);
       console.log(error.message);

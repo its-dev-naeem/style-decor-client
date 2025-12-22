@@ -19,6 +19,8 @@ import {
   FiTrendingUp,
   FiCalendar,
 } from "react-icons/fi";
+import LoadingSpinner from "../Shared/LoadingSpinner";
+const API_URL = import.meta.env.VITE_API_URL;
 
 const AnalyticsCharts = () => {
   const [bookings, setBookings] = useState([]);
@@ -42,8 +44,8 @@ const AnalyticsCharts = () => {
   const fetchData = async () => {
     try {
       const [bookingsRes, servicesRes] = await Promise.all([
-        axios.get("http://localhost:3000/booking-data"),
-        axios.get("http://localhost:3000/services"),
+        axios.get(`${API_URL}/booking-data`),
+        axios.get(`${API_URL}/services`),
       ]);
       setBookings(bookingsRes.data);
       setServices(servicesRes.data);
@@ -114,12 +116,7 @@ const AnalyticsCharts = () => {
     };
   };
 
-  if (loading)
-    return (
-      <div className="min-h-screen bg-base-200 p-6 flex justify-center items-center">
-        <div className="loading loading-spinner loading-lg"></div>
-      </div>
-    );
+  if (loading) return <LoadingSpinner></LoadingSpinner>;
 
   const data = prepareData();
   const COLORS = ["#0088FE", "#00C49F", "#FFBB28", "#FF8042", "#8884D8"];

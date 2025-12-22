@@ -17,6 +17,8 @@ import { AuthContext } from "../providers/AuthContext";
 import { saveOrUpdateUser } from "../utils";
 import useRole from "../hooks/useRole";
 import axios from "axios";
+import LoadingSpinner from "./Shared/LoadingSpinner";
+const API_URL = import.meta.env.VITE_API_URL;
 // import toast from "react-hot-toast";
 
 const ProfilePage = () => {
@@ -68,14 +70,11 @@ const ProfilePage = () => {
     };
     console.log(requestData);
     try {
-      const response = await axios.post(
-        "http://localhost:3000/requests",
-        requestData
-      );
-      alert('Your request sent successfully')
+      const response = await axios.post(`${API_URL}/requests`, requestData);
+      alert("Your request sent successfully");
       console.log("Data posted successfully:", response.data);
     } catch (error) {
-      alert('Your request sent failed')
+      alert("Your request sent failed");
       console.error("Error posting data:", error);
     }
   };
@@ -163,14 +162,7 @@ const ProfilePage = () => {
   };
 
   if (!user || !userRole) {
-    return (
-      <div className="flex items-center justify-center min-h-screen">
-        <div className="text-center">
-          <div className="loading loading-spinner loading-lg text-primary"></div>
-          <p className="mt-4 text-gray-600">Loading profile...</p>
-        </div>
-      </div>
-    );
+    return <LoadingSpinner></LoadingSpinner>;
   }
 
   return (

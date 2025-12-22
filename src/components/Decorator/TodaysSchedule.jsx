@@ -10,12 +10,14 @@ import {
   FiAlertCircle,
   FiPackage,
 } from "react-icons/fi";
+import LoadingSpinner from "../Shared/LoadingSpinner";
 
 const TodaysSchedule = () => {
   const { user } = useContext(AuthContext);
   const [todayProjects, setTodayProjects] = useState([]);
   const [upcomingProjects, setUpcomingProjects] = useState([]);
   const [loading, setLoading] = useState(true);
+  const API_URL = import.meta.env.VITE_API_URL;
 
   useEffect(() => {
     if (user?.email) fetchSchedule();
@@ -24,7 +26,7 @@ const TodaysSchedule = () => {
   const fetchSchedule = async () => {
     try {
       const response = await axios.get(
-        `http://localhost:3000/payment/decorator/${user.email}`
+        `${API_URL}/payment/decorator/${user.email}`
       );
       const projects = response.data;
       const today = new Date().toDateString();
@@ -72,12 +74,7 @@ const TodaysSchedule = () => {
     }
   };
 
-  if (loading)
-    return (
-      <div className="flex justify-center items-center min-h-screen">
-        <div className="loading loading-spinner loading-lg"></div>
-      </div>
-    );
+  if (loading) return <LoadingSpinner></LoadingSpinner>;
 
   const totalProjects = todayProjects.length + upcomingProjects.length;
 

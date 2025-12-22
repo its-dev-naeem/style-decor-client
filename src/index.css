@@ -1,4 +1,7 @@
 @import "tailwindcss";
 @plugin "daisyui";
 
-
+.active{
+    color: black;
+    font: bold;
+}

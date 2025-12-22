@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { NavLink } from "react-router";
 import {
   FaUser,
@@ -23,8 +23,10 @@ import {
 } from "react-icons/fa";
 import { FaList } from "react-icons/fa6";
 import useRole from "../../hooks/useRole";
+import { AuthContext } from "../../providers/AuthContext";
 
 const DashboardSidebar = () => {
+  const {user} = useContext(AuthContext)
   const { role } = useRole();
   const userRole = role?.role;
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
@@ -187,8 +189,8 @@ const DashboardSidebar = () => {
         : userRole === "decorator"
         ? "Decorator Pro"
         : "John Client",
-    email: `${userRole}@example.com`,
-    avatar: `https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop&crop=face`,
+    email: `${user.email}`,
+    avatar: `${user.photoURL}`,
   };
 
   return (

@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { FaCalendarAlt, FaArrowRight, FaStar, FaCheckCircle, FaUsers, FaAward } from 'react-icons/fa';
+import { useNavigate } from 'react-router';
 
 const HomeHero = () => {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const navigate = useNavigate()
 
   const heroImages = [
     "https://images.unsplash.com/photo-1615529182904-14819c35db37?w=1600&h=900&fit=crop&q=80",
@@ -56,7 +58,8 @@ const HomeHero = () => {
   };
 
   const handleBookService = () => {
-    alert("Booking decoration service...");
+    navigate('/services')
+    // alert("Booking decoration service...");
     // In real app: navigate to booking page
   };
 

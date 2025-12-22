@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useForm } from "react-hook-form";
 import { toast, Toaster } from "react-hot-toast";
+import LoadingSpinner from "../Shared/LoadingSpinner";
+const API_URL = import.meta.env.VITE_API_URL;
 
 const ServiceManagement = () => {
   const [services, setServices] = useState([]);
@@ -27,7 +29,7 @@ const ServiceManagement = () => {
   const fetchServices = async () => {
     try {
       setLoading(true);
-      const response = await axios.get("http://localhost:3000/services");
+      const response = await axios.get(`${API_URL}/services`);
       setServices(response.data);
     } catch (error) {
       console.error("Error fetching services:", error);
@@ -76,10 +78,7 @@ const ServiceManagement = () => {
   const onSubmit = async (data) => {
     try {
       if (editingService) {
-        await axios.put(
-          `http://localhost:3000/services/${editingService._id}`,
-          data
-        );
+        await axios.put(`${API_URL}/services/${editingService._id}`, data);
         alert("Service updated successfully!");
       }
       setShowModal(false);
@@ -95,7 +94,7 @@ const ServiceManagement = () => {
   // Handle Delete
   const handleDelete = async (id) => {
     try {
-      await axios.delete(`http://localhost:3000/services/${id}`);
+      await axios.delete(`${API_URL}/services/${id}`);
       setServices(services.filter((service) => service._id !== id));
       toast.success("Service deleted successfully!");
       setDeleteConfirm(null);
@@ -131,14 +130,7 @@ const ServiceManagement = () => {
   };
 
   if (loading) {
-    return (
-      <div className="flex items-center justify-center min-h-screen">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500 mx-auto"></div>
-          <p className="mt-4 text-gray-600">Loading services...</p>
-        </div>
-      </div>
-    );
+    return <LoadingSpinner></LoadingSpinner>;
   }
 
   return (

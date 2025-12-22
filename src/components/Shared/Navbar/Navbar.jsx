@@ -71,7 +71,7 @@ const Navbar = () => {
           {/* Login/Profile Section */}
           <div className="flex-none">
             {!isLoggedIn ? (
-              <Link to='/signup' className="btn btn-ghost">Login</Link>
+              <Link to='/login' className="btn btn-ghost">Login</Link>
             ) : (
               <div className="dropdown dropdown-end">
                 <label tabIndex={0} className="btn btn-ghost btn-circle avatar">

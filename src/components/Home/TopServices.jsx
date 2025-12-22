@@ -2,6 +2,8 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { FaStar, FaEye } from "react-icons/fa";
 import { Link } from "react-router";
+import LoadingSpinner from "../Shared/LoadingSpinner";
+const API_URL = import.meta.env.VITE_API_URL;
 
 const TopServices = () => {
   const [data, setData] = useState([]);
@@ -10,7 +12,7 @@ const TopServices = () => {
   useEffect(() => {
     const loadData = async () => {
       try {
-        const res = await axios.get("http://localhost:3000/services");
+        const res = await axios.get(`${API_URL}/services`);
         setData(res.data.slice(0, 6));
       } catch (error) {
         console.log(error);
@@ -22,29 +24,7 @@ const TopServices = () => {
   }, []);
 
   if (loading) {
-    return (
-      <div className="py-16 bg-gray-50">
-        <div className="max-w-7xl mx-auto px-4">
-          <div className="text-center mb-10">
-            <h2 className="text-3xl font-bold mb-3 bg-gray-200 h-10 w-64 mx-auto rounded animate-pulse"></h2>
-            <p className="bg-gray-200 h-6 w-96 mx-auto rounded animate-pulse"></p>
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {[...Array(6)].map((_, i) => (
-              <div key={i} className="card bg-white shadow-lg">
-                <div className="skeleton h-48 w-full rounded-t-lg"></div>
-                <div className="card-body p-6 space-y-4">
-                  <div className="skeleton h-6 w-3/4"></div>
-                  <div className="skeleton h-4 w-1/2"></div>
-                  <div className="skeleton h-4 w-full"></div>
-                  <div className="skeleton h-12 w-full rounded-lg"></div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </div>
-    );
+    return <LoadingSpinner></LoadingSpinner>;
   }
 
   return (

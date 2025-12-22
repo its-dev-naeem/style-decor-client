@@ -1,4 +1,5 @@
 import axios from "axios";
+const API_URL = import.meta.env.VITE_API_URL;
 
 export const imageUpload = async (imageData) => {
   const formData = new FormData();
@@ -12,13 +13,8 @@ export const imageUpload = async (imageData) => {
   return data?.data?.display_url;
 };
 
-
-
 // save or update user in db
-export const saveOrUpdateUser = async userData => {
-  const { data } = await axios.post(
-    `http://localhost:3000/user`,
-    userData
-  )
-  return data
-}
+export const saveOrUpdateUser = async (userData) => {
+  const { data } = await axios.post(`${API_URL}/user`, userData);
+  return data;
+};

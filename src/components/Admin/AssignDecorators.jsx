@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import LoadingSpinner from "../Shared/LoadingSpinner";
+const API_URL = import.meta.env.VITE_API_URL;
 
 export default function AssignDecoratorPage() {
   const [services, setServices] = useState([]);
@@ -13,15 +15,13 @@ export default function AssignDecoratorPage() {
     const fetchData = async () => {
       try {
         setLoading(true);
-        const paymentsResponse = await axios.get(
-          "http://localhost:3000/payments"
-        );
+        const paymentsResponse = await axios.get(`${API_URL}/payments`);
         setServices(paymentsResponse.data);
 
-        const response = await axios.get("http://localhost:3000/decorators");
+        const response = await axios.get(`${API_URL}/decorators`);
         const apiDecorators = response.data;
         const decorators = apiDecorators.map((item, index) => ({
-          id: index + 1, 
+          id: index + 1,
           name: item.name,
           email: item.email,
         }));
@@ -60,10 +60,7 @@ export default function AssignDecoratorPage() {
         decoretorName: decorator.name,
         decoretorEmail: decorator.email,
       };
-      await axios.patch(
-        `http://localhost:3000/add-decorator/${serviceId}`,
-        updateData
-      );
+      await axios.patch(`${API_URL}/add-decorator/${serviceId}`, updateData);
       setAssigned((prev) => ({
         ...prev,
         [serviceId]: { name: decorator.name, email: decorator.email },
@@ -90,14 +87,7 @@ export default function AssignDecoratorPage() {
   };
 
   if (loading) {
-    return (
-      <div className="w-full min-h-screen bg-gray-100 flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500 mx-auto"></div>
-          <p className="mt-4 text-gray-600">Loading payments data...</p>
-        </div>
-      </div>
-    );
+    return <LoadingSpinner></LoadingSpinner>;
   }
 
   if (error) {

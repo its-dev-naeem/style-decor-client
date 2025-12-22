@@ -10,6 +10,7 @@ import {
 } from "react-icons/fa";
 import { MdEmail, MdCategory } from "react-icons/md";
 import { AuthContext } from "../../providers/AuthContext";
+const API_URL = import.meta.env.VITE_API_URL;
 
 const ServiceDetails = () => {
   const { user } = useContext(AuthContext);
@@ -21,7 +22,7 @@ const ServiceDetails = () => {
   useEffect(() => {
     const loadData = async () => {
       try {
-        const res = await axios.get(`http://localhost:3000/services/${id}`);
+        const res = await axios.get(`${API_URL}/services/${id}`);
         setData(res.data);
       } catch (error) {
         console.log(error);
@@ -67,12 +68,10 @@ const ServiceDetails = () => {
           status: "Unpaid",
         },
       };
-      await axios
-        .post(`http://localhost:3000/booking-data`, bookingData)
-        .then((res) => {
-          console.log(res);
-          navigate("/dashboard/bookings");
-        });
+      await axios.post(`${API_URL}/booking-data`, bookingData).then((res) => {
+        console.log(res);
+        navigate("/dashboard/bookings");
+      });
     } catch (error) {
       console.log(error);
     }

@@ -1,12 +1,14 @@
 import axios from "axios";
 import { useContext, useEffect, useState } from "react";
 import { AuthContext } from "../../providers/AuthContext";
+import LoadingSpinner from "../Shared/LoadingSpinner";
 
 const PaymentStatus = () => {
   const { user } = useContext(AuthContext);
   const [payments, setPayments] = useState([]);
   const [loading, setLoading] = useState(true);
   const email = user?.email;
+  const API_URL = import.meta.env.VITE_API_URL;
 
   useEffect(() => {
     if (email) {
@@ -17,9 +19,7 @@ const PaymentStatus = () => {
 
   const fetchBookings = async () => {
     try {
-      const response = await axios.get(
-        `http://localhost:3000/my-payments/${email}`
-      );
+      const response = await axios.get(`${API_URL}/my-payments/${email}`);
       setPayments(response.data);
     } catch (error) {
       console.error("Error fetching bookings:", error);
@@ -28,16 +28,10 @@ const PaymentStatus = () => {
     }
   };
 
-  // লোডিং স্টেট
   if (loading) {
-    return (
-      <div className="flex justify-center items-center min-h-[400px]">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
-      </div>
-    );
+    return <LoadingSpinner></LoadingSpinner>;
   }
 
-  // যদি কোনো পেমেন্ট না থাকে
   if (payments.length === 0) {
     return (
       <div className="min-h-[400px] flex flex-col justify-center items-center p-4">
@@ -279,7 +273,6 @@ const PaymentStatus = () => {
         </table>
       </div>
 
-      {/* মোবাইল ভিউ জন্য কার্ড ডিজাইন (ছোট স্ক্রিনে টেবিলের পরিবর্তে) */}
       <div className="mt-6 md:hidden">
         <div className="space-y-4">
           {payments.map((payment) => (

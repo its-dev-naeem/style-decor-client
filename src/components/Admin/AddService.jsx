@@ -15,9 +15,10 @@ import {
 import { AuthContext } from "../../providers/AuthContext";
 import { imageUpload } from "../../utils";
 import axios from "axios";
+const API_URL = import.meta.env.VITE_API_URL;
 
 const AddService = () => {
-  const {user} = useContext(AuthContext)
+  const { user } = useContext(AuthContext);
   const {
     register,
     handleSubmit,
@@ -81,7 +82,7 @@ const AddService = () => {
       alert("Image size should be less than 5MB");
       return;
     }
-    setPhotoFile(file)
+    setPhotoFile(file);
     // Simulate upload progress
     setIsUploading(true);
     setUploadProgress(0);
@@ -112,8 +113,8 @@ const AddService = () => {
     try {
       // Simulate API call
       await new Promise((resolve) => setTimeout(resolve, 1500));
-      const ServicImage =  await imageUpload(photoFile);
-      delete data.image
+      const ServicImage = await imageUpload(photoFile);
+      delete data.image;
       const finalData = {
         ...data,
         ServicImage,
@@ -123,20 +124,20 @@ const AddService = () => {
         providerPhoto: user.photoURL,
         TotalRating: 0,
         AvgRating: 0,
-        serviceSales : 0 ,
-        reviews:[
+        serviceSales: 0,
+        reviews: [
           {
-            id:1,
-            CommenterPhoto: "none" ,
-            CommenterEmail: "none" ,
-            CommenterName: "none" ,
-            comment: 'Nothing',
+            id: 1,
+            CommenterPhoto: "none",
+            CommenterEmail: "none",
+            CommenterName: "none",
+            comment: "Nothing",
             rating: 5,
           },
-        ]
+        ],
       };
       console.log(finalData);
-      const result = await axios.post(`http://localhost:3000/services`, finalData)
+      const result = await axios.post(`${API_URL}/services`, finalData);
       console.log(result);
       // console.log(user);
 
@@ -148,16 +149,6 @@ const AddService = () => {
           <p className="text-sm">"{data.serviceName}" is now live.</p>
         </div>
       );
-
-      // Reset form
-      // reset();
-      // setImagePreview(null);
-      // setUploadProgress(0);
-
-      // Reset file input
-      // if (fileInputRef.current) {
-      //   fileInputRef.current.value = "";
-      // }
     } catch (error) {
       console.log(error);
       alert("Failed to add service. Please try again.");
