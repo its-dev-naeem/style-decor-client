@@ -310,7 +310,7 @@ const AddService = () => {
                       </label>
                       <div className="relative">
                         <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500">
-                          $
+                          BDT
                         </span>
                         <input
                           type="number"
@@ -318,12 +318,12 @@ const AddService = () => {
                             errors.price ? "input-error" : ""
                           }`}
                           placeholder="0000"
-                          step="0.01"
+                          step="1"
                           {...register("price", {
                             required: "Price is required",
                             min: {
                               value: 1,
-                              message: "Price must be at least $1",
+                              message: "Price must be at least BDT1",
                             },
                           })}
                         />
@@ -532,7 +532,7 @@ const AddService = () => {
                             Starting from
                           </span>
                           <p className="text-2xl font-bold text-primary">
-                            ${parseFloat(price).toLocaleString()}
+                            BDT {parseFloat(price).toLocaleString()}
                           </p>
                         </div>
                       ) : (

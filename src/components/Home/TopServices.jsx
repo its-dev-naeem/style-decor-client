@@ -75,7 +75,7 @@ const TopServices = () => {
                   className="w-full h-56 object-cover group-hover:scale-105 transition-transform duration-500"
                 />
                 <div className="absolute top-4 right-4 bg-primary text-white px-3 py-1 rounded-full text-sm font-semibold">
-                  ${service.price}
+                  BDT{service.price}
                 </div>
               </div>
 
@@ -86,7 +86,8 @@ const TopServices = () => {
                   {service.serviceName}
                 </h3>
                 <p className="text-gray-500 text-sm mb-4">
-                  By: <span className="font-medium">{service.providerName}</span>
+                  By:{" "}
+                  <span className="font-medium">{service.providerName}</span>
                 </p>
 
                 {/* Rating */}
@@ -96,7 +97,11 @@ const TopServices = () => {
                       {[...Array(5)].map((_, i) => (
                         <FaStar
                           key={i}
-                          className={i < Math.round(service.AvgRating) ? "fill-current" : "text-gray-300"}
+                          className={
+                            i < Math.round(service.AvgRating)
+                              ? "fill-current"
+                              : "text-gray-300"
+                          }
                         />
                       ))}
                     </div>

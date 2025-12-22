@@ -40,7 +40,7 @@ const ServiceDetails = () => {
   const handleShowLessReviews = () => {
     setVisibleReviews(4);
   };
-console.log(data);
+  console.log(data);
   const handleBooking = async () => {
     try {
       const bookingData = {
@@ -64,14 +64,15 @@ console.log(data);
           price: Number(data?.price),
           id: data._id,
           bookTime: new Date().toLocaleString(),
-          status: 'Unpaid'
+          status: "Unpaid",
         },
       };
-      await axios.post(`http://localhost:3000/booking-data`, bookingData)
-      .then((res) => {
-        console.log(res)
-        navigate("/dashboard/bookings")
-      })
+      await axios
+        .post(`http://localhost:3000/booking-data`, bookingData)
+        .then((res) => {
+          console.log(res);
+          navigate("/dashboard/bookings");
+        });
     } catch (error) {
       console.log(error);
     }
@@ -282,7 +283,7 @@ console.log(data);
                   </div>
                   <div className="text-right">
                     <div className="text-3xl font-bold text-green-600">
-                      ${data.price}
+                      BDT{data.price}
                     </div>
                     <div className="text-sm text-gray-500">per {data.unit}</div>
                   </div>

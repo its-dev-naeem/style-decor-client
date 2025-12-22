@@ -296,7 +296,7 @@ const ServiceManagement = () => {
                     <td className="p-4">
                       <div>
                         <p className="text-lg font-bold text-gray-900">
-                          ${service.price}
+                          BDT {service.price}
                         </p>
                         <p className="text-sm text-gray-500">
                           per {service.unit}
@@ -397,7 +397,7 @@ const ServiceManagement = () => {
                       </div>
                       <div className="text-right">
                         <p className="text-lg font-bold text-gray-900">
-                          ${service.price}
+                          BDT {service.price}
                         </p>
                         <p className="text-xs text-gray-500">
                           per {service.unit}

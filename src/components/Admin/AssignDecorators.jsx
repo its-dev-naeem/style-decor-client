@@ -322,7 +322,7 @@ export default function AssignDecoratorPage() {
                         </div>
                         <div className="text-sm">
                           <p className="font-semibold text-gray-800">
-                            ${service.price}
+                            BDT {service.price}
                           </p>
                           <p className="text-xs text-gray-500 mt-1">
                             Transaction:{" "}

@@ -156,7 +156,7 @@ const ManageBookings = () => {
                               {booking.service.caterory}
                             </div>
                             <div className="flex items-center gap-2 text-sm text-gray-500">
-                              <FaMoneyBill /> ${booking.service.price}
+                              <FaMoneyBill /> BDT {booking.service.price}
                             </div>
                           </div>
                         </div>
@@ -252,7 +252,7 @@ const ManageBookings = () => {
 
                 {/* Price */}
                 <div className="flex items-center gap-2 mt-3 text-lg font-bold">
-                  <FaMoneyBill /> ${booking.service.price}
+                  <FaMoneyBill /> BDT {booking.service.price}
                 </div>
 
                 <div className="divider"></div>

@@ -103,7 +103,7 @@ const MyAssignedProject = () => {
                       <div className="bg-base-300 rounded-lg p-3">
                         <FiDollarSign className="mx-auto text-lg mb-1 text-green-500" />
                         <div className="text-sm text-gray-500">Price</div>
-                        <div className="font-bold text-lg">${project.price}</div>
+                        <div className="font-bold text-lg">BDT {project.price}</div>
                       </div>
                       <div className="bg-base-300 rounded-lg p-3">
                         <FiPackage className="mx-auto text-lg mb-1 text-blue-500" />
@@ -171,7 +171,7 @@ const MyAssignedProject = () => {
                           <td className="py-6 px-6 text-center">
                             <div className="flex flex-col items-center">
                               <FiDollarSign className="mb-1 text-green-500" />
-                              <span className="font-bold">${project.price}</span>
+                              <span className="font-bold">BDT {project.price}</span>
                             </div>
                           </td>
                           
@@ -235,7 +235,7 @@ const MyAssignedProject = () => {
               </div>
               <div className="stat-title">Total Value</div>
               <div className="stat-value text-2xl">
-                ${projects.reduce((sum, p) => sum + parseFloat(p.price || 0), 0).toFixed(2)}
+                BDT {projects.reduce((sum, p) => sum + parseFloat(p.price || 0), 0).toFixed(2)}
               </div>
             </div>
           </div>

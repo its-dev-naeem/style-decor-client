@@ -24,6 +24,8 @@ import RevenueMonitoring from "../components/Admin/RevenueMonitoring";
 import AnalyticsCharts from "../components/Admin/AnalyticsCharts";
 import MyAssignedProject from "../components/Decorator/MyAssignedProject";
 import TodaysSchedule from "../components/Decorator/TodaysSchedule";
+import UpdateWorkStatus from "../components/Decorator/UpdateWorkStatus";
+import EarningsSummary from "../components/Decorator/EarningsSummary";
 
 export const router = createBrowserRouter([
   {
@@ -135,11 +137,11 @@ export const router = createBrowserRouter([
       },
       {
         path: "/dashboard/decorator-status",
-        element: <Dashboard />,
+        element: <UpdateWorkStatus />,
       },
       {
         path: "/dashboard/decorator-earnings",
-        element: <Dashboard />,
+        element: <EarningsSummary />,
       },
     ],
   },

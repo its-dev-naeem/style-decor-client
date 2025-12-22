@@ -14,7 +14,7 @@ const DashboardLayout = () => {
         </h1>
         <div className=" mx-auto flex">
           <DashboardSidebar></DashboardSidebar>
-          <div className="m-5 w-full">
+          <div className=" w-full">
             <Outlet></Outlet>
           </div>
         </div>

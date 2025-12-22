@@ -195,7 +195,7 @@ const TodaysSchedule = () => {
                         <div>
                           <div className="text-sm text-gray-500">Price</div>
                           <div className="font-bold text-lg">
-                            ${project.price}
+                            BDT{project.price}
                           </div>
                         </div>
                         <div>
@@ -278,7 +278,7 @@ const TodaysSchedule = () => {
                           </td>
                           <td className="py-4 px-6 text-center">
                             <div className="font-bold text-lg">
-                              ${project.price}
+                              BDT{project.price}
                             </div>
                             <div className="text-sm text-gray-500">
                               {project.unit}
