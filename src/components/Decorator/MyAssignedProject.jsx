@@ -185,7 +185,7 @@ const MyAssignedProject = () => {
                           <td className="py-6 px-6 text-center">
                             <div className="flex flex-col items-center">
                               <FiClock className="mb-1 text-gray-400" />
-                              <span>{project.time || "Flexible"}</span>
+                              <span>{project.deliveryTime || "Flexible"}</span>
                             </div>
                           </td>
                           

@@ -23,6 +23,7 @@ import ServiceManagement from "../components/Admin/ServiceManagement";
 import RevenueMonitoring from "../components/Admin/RevenueMonitoring";
 import AnalyticsCharts from "../components/Admin/AnalyticsCharts";
 import MyAssignedProject from "../components/Decorator/MyAssignedProject";
+import TodaysSchedule from "../components/Decorator/TodaysSchedule";
 
 export const router = createBrowserRouter([
   {
@@ -130,7 +131,7 @@ export const router = createBrowserRouter([
       },
       {
         path: "/dashboard/decorator-schedule",
-        element: <Dashboard />,
+        element: <TodaysSchedule />,
       },
       {
         path: "/dashboard/decorator-status",

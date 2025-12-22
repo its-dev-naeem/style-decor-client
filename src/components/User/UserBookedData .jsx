@@ -23,6 +23,8 @@ const UserBookedData = () => {
   const { register, watch } = useForm({});
   const quantity = watch("quantity", 1);
   const location = watch("location", "Dhaka");
+  const deliveryTime = watch("deliveryTime",);
+  const workStatus = "Pending";
 
   //   console.log(quantity);
   const uid = user?.uid;
@@ -66,7 +68,13 @@ const UserBookedData = () => {
     if (!selectedBooking) return;
     const totalPrice = parseFloat(quantity * selectedBooking.service.price);
     // console.log(totalPrice);
-    const payInfo = { ...selectedBooking, totalPrice, location, };
+    const payInfo = {
+      ...selectedBooking,
+      totalPrice,
+      location,
+      deliveryTime,
+      workStatus,
+    };
     console.log(payInfo);
     setShowPayModal(false);
     try {
@@ -226,13 +234,14 @@ const UserBookedData = () => {
                             </button>
                           </>
                         )}
-                        {
-                          booking.service.status === "Paid" && (
-                            <Link to='/dashboard/payments' className="btn btn-sm btn-accent  flex justify-center shadow-xl items-center">
+                        {booking.service.status === "Paid" && (
+                          <Link
+                            to="/dashboard/payments"
+                            className="btn btn-sm btn-accent  flex justify-center shadow-xl items-center"
+                          >
                             Browse Payments
-                            </Link>
-                          )
-                        }
+                          </Link>
+                        )}
                       </div>
                     </td>
                   </tr>
@@ -393,21 +402,39 @@ const UserBookedData = () => {
 
                 <div className="space-y-3">
                   <form className="flex flex-col gap-3">
-                    <div className="flex">
-                      <label
-                        className="flex-1 font-bold text-lg"
-                        htmlFor="quantity"
-                      >
-                        Get total Unit:
-                      </label>
-                      <input
-                        id="quantity"
-                        type="number"
-                        defaultValue={1}
-                        placeholder="total Unit"
-                        className="input flex-1"
-                        {...register("quantity", { min: 1 })}
-                      />
+                    <div className="flex gap-2">
+                      <div>
+                        <label
+                          className="flex-1 font-bold text-lg"
+                          htmlFor="quantity"
+                        >
+                          Get total Unit:
+                        </label>
+                        <input
+                          id="quantity"
+                          type="number"
+                          defaultValue={1}
+                          placeholder="total Unit"
+                          className="input flex-1"
+                          {...register("quantity", { min: 1 })}
+                        />
+                      </div>
+                      <div>
+                        <label
+                          className="flex-1 font-bold text-lg"
+                          htmlFor="deliveryTime"
+                        >
+                          Delivery Time:
+                        </label>
+                        <input
+                          required
+                          id="deliveryTime"
+                          type="date"
+                          defaultValue={1}
+                          className="input flex-1"
+                          {...register("deliveryTime", { min: 1 })}
+                        />
+                      </div>
                     </div>
                     <div>
                       <label
