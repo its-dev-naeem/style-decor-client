@@ -20,6 +20,7 @@ import {
   FiCalendar,
 } from "react-icons/fi";
 import LoadingSpinner from "../Shared/LoadingSpinner";
+import toast from "react-hot-toast";
 const API_URL = import.meta.env.VITE_API_URL;
 
 const AnalyticsCharts = () => {
@@ -51,7 +52,7 @@ const AnalyticsCharts = () => {
       setServices(servicesRes.data);
       setLoading(false);
     } catch (error) {
-      console.error("Error:", error);
+      toast.error("Error:", error);
       setLoading(false);
     }
   };

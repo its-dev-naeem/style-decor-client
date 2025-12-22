@@ -18,8 +18,9 @@ import { saveOrUpdateUser } from "../utils";
 import useRole from "../hooks/useRole";
 import axios from "axios";
 import LoadingSpinner from "./Shared/LoadingSpinner";
+import toast from "react-hot-toast";
 const API_URL = import.meta.env.VITE_API_URL;
-// import toast from "react-hot-toast";
+
 
 const ProfilePage = () => {
   const { user, updateNamePhoto, updateEmail } = useContext(AuthContext);
@@ -68,14 +69,11 @@ const ProfilePage = () => {
       photo: user?.photoURL,
       requestDate: formattedDate,
     };
-    console.log(requestData);
     try {
       const response = await axios.post(`${API_URL}/requests`, requestData);
-      alert("Your request sent successfully");
-      console.log("Data posted successfully:", response.data);
+      toast.success("Your request sent successfully");
     } catch (error) {
-      alert("Your request sent failed");
-      console.error("Error posting data:", error);
+      toast.error("Your request sent failed");
     }
   };
 
@@ -141,11 +139,10 @@ const ProfilePage = () => {
         website: data.website || "",
       });
 
-      alert("✅ Profile Updated Successfully!");
+      toast.success("Profile Updated Successfully!");
       setIsEditing(false);
     } catch (error) {
-      console.error("Update failed:", error);
-      alert(`❌ Profile update failed: ${error.message}`);
+      toast.error(`Profile update failed`);
     }
   };
 

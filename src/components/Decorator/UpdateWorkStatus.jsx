@@ -8,6 +8,7 @@ import {
   FiRefreshCw,
 } from "react-icons/fi";
 import LoadingSpinner from "../Shared/LoadingSpinner";
+import toast from "react-hot-toast";
 const API_URL = import.meta.env.VITE_API_URL;
 
 const UpdateWorkStatus = () => {
@@ -47,9 +48,10 @@ const UpdateWorkStatus = () => {
             : project
         )
       );
+      toast.success('Status update successfull!')
     } catch (error) {
       console.error("Error updating:", error);
-      alert("Failed to update status");
+      toast.error("Failed to update status");
     } finally {
       setUpdating(false);
     }

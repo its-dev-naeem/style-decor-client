@@ -13,6 +13,7 @@ import { EffectCoverflow, Pagination } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/effect-coverflow";
 import "swiper/css/pagination";
+import toast from "react-hot-toast";
 
 const TopDecorators = () => {
   const [favorites, setFavorites] = useState([1, 3]);
@@ -122,8 +123,8 @@ const TopDecorators = () => {
     );
   };
 
-  const handleBook = (name) => alert(`Booking ${name}`);
-  const handleContact = (name) => alert(`Contacting ${name}`);
+  const handleBook = (name) => toast(`Booking ${name}`);
+  const handleContact = (name) => toast(`Contacting ${name}`);
 
   return (
     <div className="py-12 bg-base-100">

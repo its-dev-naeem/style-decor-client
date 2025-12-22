@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useForm } from "react-hook-form";
-import { toast, Toaster } from "react-hot-toast";
+import { toast } from "react-hot-toast";
 import LoadingSpinner from "../Shared/LoadingSpinner";
 const API_URL = import.meta.env.VITE_API_URL;
 
@@ -79,7 +79,7 @@ const ServiceManagement = () => {
     try {
       if (editingService) {
         await axios.put(`${API_URL}/services/${editingService._id}`, data);
-        alert("Service updated successfully!");
+        toast.success("Service updated successfully!");
       }
       setShowModal(false);
       fetchServices();
@@ -135,7 +135,7 @@ const ServiceManagement = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-blue-50 p-4 md:p-6">
-      <Toaster position="top-right" />
+
 
       {/* Header */}
       <div className="max-w-7xl mx-auto">

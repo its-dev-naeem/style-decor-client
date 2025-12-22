@@ -11,6 +11,7 @@ import {
 import { AuthContext } from "../../providers/AuthContext";
 import { useForm } from "react-hook-form";
 import { saveOrUpdateUser } from "../../utils";
+import toast from "react-hot-toast";
 
 
 const Login = () => {
@@ -49,7 +50,7 @@ const Login = () => {
         localStorage.removeItem("rememberMe");
       }
 
-      alert("Login successful!");
+      toast.success("Login successful!");
       navigate('/');
     } catch (error) {
       setError("general", {
@@ -57,7 +58,7 @@ const Login = () => {
         message: "Invalid email or password",
       });
 
-      alert("Login failed: " + error.message);
+      toast.error("Login failed: " + error.message);
     }
   };
 
@@ -72,7 +73,7 @@ const Login = () => {
       });
       navigate('/');
     } catch (error) {
-      alert(error.message);
+      toast.error(error.message);
     }
   };
 

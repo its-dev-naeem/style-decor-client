@@ -12,6 +12,7 @@ import {
 } from "react-icons/fa";
 import { MdEmail, MdCategory } from "react-icons/md";
 import LoadingSpinner from "../Shared/LoadingSpinner";
+import toast from "react-hot-toast";
 const API_URL = import.meta.env.VITE_API_URL;
 
 const ManageBookings = () => {
@@ -60,8 +61,9 @@ const ManageBookings = () => {
     try {
       await axios.delete(`${API_URL}/booking-data/${id}`);
       setBookings(bookings.filter((b) => b._id !== id));
+      toast.success('Booking cancel successfull!')
     } catch (error) {
-      console.error("Error canceling booking:", error);
+      toast.error("Error canceling booked");
     }
   };
 

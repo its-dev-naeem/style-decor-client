@@ -59,8 +59,6 @@ const HomeHero = () => {
 
   const handleBookService = () => {
     navigate('/services')
-    // alert("Booking decoration service...");
-    // In real app: navigate to booking page
   };
 
   return (

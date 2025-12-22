@@ -28,8 +28,7 @@ const Forgot = () => {
     
     // Simulate API call
     setTimeout(() => {
-      forgotPassword(email)
-      // console.log('Password reset requested for:', email);
+      forgotPassword(email);
       setIsSubmitting(false);
       setIsSubmitted(true);
     }, 1500);

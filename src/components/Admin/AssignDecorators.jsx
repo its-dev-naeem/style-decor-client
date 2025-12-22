@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import LoadingSpinner from "../Shared/LoadingSpinner";
+import toast from "react-hot-toast";
 const API_URL = import.meta.env.VITE_API_URL;
 
 export default function AssignDecoratorPage() {
@@ -25,7 +26,6 @@ export default function AssignDecoratorPage() {
           name: item.name,
           email: item.email,
         }));
-        // console.log(decorators);
         setDecorators(decorators);
 
         const initialAssigned = {};
@@ -39,7 +39,7 @@ export default function AssignDecoratorPage() {
         });
         setAssigned(initialAssigned);
       } catch (err) {
-        console.error("Error fetching data:", err);
+        toast.error("Error fetching data:");
         setError("Failed to load data. Please try again.");
       } finally {
         setLoading(false);
@@ -71,8 +71,7 @@ export default function AssignDecoratorPage() {
         setUpdateSuccess((prev) => ({ ...prev, [serviceId]: false }));
       }, 3000);
     } catch (err) {
-      console.error("Error assigning decorator:", err);
-      alert("Failed to assign decorator. Please try again.");
+      toast.error("Failed to assign decorator. Please try again.");
     }
   };
 

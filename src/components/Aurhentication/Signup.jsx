@@ -13,6 +13,7 @@ import {
 import { AuthContext } from "../../providers/AuthContext";
 import { useForm } from "react-hook-form";
 import { imageUpload, saveOrUpdateUser } from "../../utils";
+import toast from "react-hot-toast";
 
 const Signup = () => {
   const { createUser, googleSignIn } = useContext(AuthContext);
@@ -76,10 +77,10 @@ const Signup = () => {
         imageURL: photoURL,
       });
 
-      alert("Registration successful!");
+      toast.success("Registration successful!");
       navigate("/");
     } catch (error) {
-      alert("Registration failed: " + error.message);
+      toast("Registration failed: " + error.message);
     }
   };
   // console.log(photoFile);
@@ -96,7 +97,7 @@ const Signup = () => {
       });
       navigate('/')
     } catch (error) {
-      alert(error.message);
+      toast(error.message);
       console.log(error.message);
     }
   };

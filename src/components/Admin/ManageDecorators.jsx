@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { FiSearch, FiUser, FiUserCheck, FiShield } from "react-icons/fi";
 import LoadingSpinner from "../Shared/LoadingSpinner";
+import toast from "react-hot-toast";
 const API_URL = import.meta.env.VITE_API_URL;
 
 const ManageDecorators = () => {
@@ -11,8 +12,6 @@ const ManageDecorators = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedRole, setSelectedRole] = useState("All User");
   const [showRequestModal, setShowRequestModal] = useState(false);
-  const [selectedUserId, setSelectedUserId] = useState(null);
-  // console.log();
   const [request, setRequest] = useState([]);
   const [decoratorRequests, setDecoratorRequests] = useState([]);
 
@@ -87,10 +86,10 @@ const ManageDecorators = () => {
         )
       );
 
-      alert("Role updated successfully!");
+      toast.success("Role updated successfully!");
     } catch (error) {
       console.error("Error updating role:", error);
-      alert("Failed to update role");
+      toast.error("Failed to update role");
     }
   };
 
@@ -98,7 +97,6 @@ const ManageDecorators = () => {
     await axios.delete(`${API_URL}/delete-request/${id}`);
   };
 
-  // console.log(decoratorRequests);
   const handleRequestAction = (requestId, requestEmail, action) => {
     // Remove request from list
     setDecoratorRequests(
@@ -108,8 +106,9 @@ const ManageDecorators = () => {
     if (action === "accept") {
       handleRoleChange(requestEmail, "decorator");
       handleReject(requestId);
+      toast.success('Request Accept!')
     } else {
-      alert("Request rejected!");
+      toast("Request rejected!");
       handleReject(requestId);
     }
   };

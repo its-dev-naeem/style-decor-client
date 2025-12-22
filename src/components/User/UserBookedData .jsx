@@ -13,6 +13,7 @@ import { AuthContext } from "../../providers/AuthContext";
 import { useForm } from "react-hook-form";
 import { Link } from "react-router";
 import LoadingSpinner from "../Shared/LoadingSpinner";
+import toast from "react-hot-toast";
 const API_URL = import.meta.env.VITE_API_URL;
 
 const UserBookedData = () => {
@@ -54,20 +55,18 @@ const UserBookedData = () => {
   };
 
   const handleCancel = async (bookingId) => {
-    alert("delete successfull..!");
     fetchBookings();
-
     try {
       await axios.delete(`${API_URL}/booking-data/${bookingId}`);
+      toast.success("delete successfull..!");
     } catch (error) {
-      console.error("Error canceling booking:", error);
+      toast("Error canceling booking");
     }
   };
 
   const handlePaymentSubmit = async () => {
     if (!selectedBooking) return;
     const totalPrice = parseFloat(quantity * selectedBooking.service.price);
-    // console.log(totalPrice);
     const payInfo = {
       ...selectedBooking,
       totalPrice,
@@ -75,7 +74,7 @@ const UserBookedData = () => {
       deliveryTime,
       workStatus,
     };
-    console.log(payInfo);
+    // console.log(payInfo);
     setShowPayModal(false);
     try {
       const result = await axios.post(
@@ -85,7 +84,7 @@ const UserBookedData = () => {
       const redirectUrl = result.data.url;
       window.location.href = redirectUrl;
     } catch (error) {
-      console.error("Payment error:", error);
+      toast.error("Payment error");
     }
   };
 

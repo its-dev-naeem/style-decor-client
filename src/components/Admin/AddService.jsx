@@ -15,6 +15,7 @@ import {
 import { AuthContext } from "../../providers/AuthContext";
 import { imageUpload } from "../../utils";
 import axios from "axios";
+import toast from "react-hot-toast";
 const API_URL = import.meta.env.VITE_API_URL;
 
 const AddService = () => {
@@ -73,13 +74,13 @@ const AddService = () => {
 
     // Validate file type
     if (!file.type.match("image.*")) {
-      alert("Please select an image file (JPEG, PNG, etc.)");
+      toast("Please select an image file (JPEG, PNG, etc.)");
       return;
     }
 
     // Validate file size (max 5MB)
     if (file.size > 5 * 1024 * 1024) {
-      alert("Image size should be less than 5MB");
+      toast("Image size should be less than 5MB");
       return;
     }
     setPhotoFile(file);
@@ -97,7 +98,7 @@ const AddService = () => {
           const reader = new FileReader();
           reader.onloadend = () => {
             setImagePreview(reader.result);
-            alert("Image uploaded successfully!");
+            toast.success("Image uploaded successfully!");
           };
           reader.readAsDataURL(file);
 
@@ -136,22 +137,12 @@ const AddService = () => {
           },
         ],
       };
-      console.log(finalData);
-      const result = await axios.post(`${API_URL}/services`, finalData);
-      console.log(result);
-      // console.log(user);
+      await axios.post(`${API_URL}/services`, finalData);
 
       // Show success alert
-      alert(
-        <div>
-          <FaCheckCircle className="inline mr-2" />
-          <strong>Service Added Successfully!</strong>
-          <p className="text-sm">"{data.serviceName}" is now live.</p>
-        </div>
-      );
+      toast.success('Service add successfull.')
     } catch (error) {
-      console.log(error);
-      alert("Failed to add service. Please try again.");
+      toast.error("Failed to add service. Please try again.");
     }
   };
 
