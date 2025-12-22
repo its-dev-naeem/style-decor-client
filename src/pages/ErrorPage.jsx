@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router';
 
-const NotFoundPage = () => {
+const ErrorPage = () => {
   return (
     <div className="min-h-screen hero bg-base-200">
       <div className="text-center hero-content">
@@ -60,4 +60,4 @@ const NotFoundPage = () => {
   );
 };
 
-export default NotFoundPage;
+export default ErrorPage;

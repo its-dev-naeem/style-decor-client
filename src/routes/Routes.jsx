@@ -1,31 +1,47 @@
 import { createBrowserRouter } from "react-router";
-import ErrorPage from "../pages/ErrorPage";
+import RoleRoute from "./RoleRoute";
+import PrivateRoute from "./PrivateRoute";
+
+// layouts
 import MainLayout from "../layouts/MainLayout";
+import DashboardLayout from "../layouts/DashboardLayout";
+
+// pages
+import ErrorPage from "../pages/ErrorPage";
 import Home from "../pages/Home/Home";
 import Services from "../pages/Services/Services";
 import About from "../pages/About/About";
 import Contact from "../pages/Contact/Contact";
-import DashboardLayout from "../layouts/DashboardLayout";
-import Dashboard from "../pages/Dashboard/Dashbord";
+import ServiceDetails from "../components/Home/ServiceDetails";
+
+// authentication
 import Signup from "../components/Aurhentication/Signup";
 import Login from "../components/Aurhentication/Login";
 import Forgot from "../components/Aurhentication/Forgot";
+
+// common
 import ProfilePage from "../components/ProfilePage";
+
+// user dashboard
+
+import PaymentSuccess from "../components/User/PaymentSuccess";
+import PaymentStatus from "../components/User/PaymentStatus";
+
+// admin dashboard
 import AddService from "../components/Admin/AddService";
 import ManageDecorators from "../components/Admin/ManageDecorators";
 import ManageBookings from "../components/Admin/ManageBookings";
 import AssignDecorators from "../components/Admin/AssignDecorators";
-import ServiceDetails from "../components/Home/ServiceDetails";
-import UserBookedData from "../components/User/UserBookedData ";
-import PaymentSuccess from "../components/User/PaymentSuccess";
-import PaymentStatus from "../components/User/PaymentStatus";
 import ServiceManagement from "../components/Admin/ServiceManagement";
 import RevenueMonitoring from "../components/Admin/RevenueMonitoring";
 import AnalyticsCharts from "../components/Admin/AnalyticsCharts";
+
+// decorator dashboard
 import MyAssignedProject from "../components/Decorator/MyAssignedProject";
 import TodaysSchedule from "../components/Decorator/TodaysSchedule";
 import UpdateWorkStatus from "../components/Decorator/UpdateWorkStatus";
 import EarningsSummary from "../components/Decorator/EarningsSummary";
+import UserBookedData from "../components/User/UserBookedData ";
 
 export const router = createBrowserRouter([
   {
@@ -33,115 +49,150 @@ export const router = createBrowserRouter([
     element: <MainLayout />,
     errorElement: <ErrorPage />,
     children: [
-      {
-        index: true,
-        element: <Home />,
-      },
-      {
-        path: "/services",
-        element: <Services />,
-      },
+      { index: true, element: <Home /> },
+      { path: "/services", element: <Services /> },
       {
         path: "/services/:id",
-        element: <ServiceDetails />,
+        element: (
+          <PrivateRoute>
+            <ServiceDetails />
+          </PrivateRoute>
+        ),
       },
       {
         path: "/payment-success",
-        element: <PaymentSuccess />,
+        element: (
+          <PrivateRoute>
+            <PaymentSuccess />
+          </PrivateRoute>
+        ),
       },
-      {
-        path: "/about",
-        element: <About />,
-      },
-      {
-        path: "/contact",
-        element: <Contact />,
-      },
-      {
-        path: "/coverage",
-        element: <Contact />,
-      },
-      { path: "/login", 
-        element: <Login /> 
-      },
-      { path: "/signup", 
-        element: <Signup /> 
-      },
-      { path: "/forgot-password", 
-        element: <Forgot /> 
-      },
+      { path: "/about", element: <About /> },
+      { path: "/contact", element: <Contact /> },
+      { path: "/coverage", element: <Contact /> },
+      { path: "/login", element: <Login /> },
+      { path: "/signup", element: <Signup /> },
+      { path: "/forgot-password", element: <Forgot /> },
     ],
   },
   {
     path: "/dashboard",
-    element: <DashboardLayout />,
+    element: (
+      <PrivateRoute>
+        <DashboardLayout />
+      </PrivateRoute>
+    ),
     children: [
-      // user dashboard links
-      {
-        path: "/dashboard/profile",
-        element: <ProfilePage />,
-      },
+      { path: "/dashboard/profile", element: <ProfilePage /> },
+
+      // user dashboard
       {
         path: "/dashboard/bookings",
-        element: <UserBookedData />,
+        element: (
+          <RoleRoute allowedRoles={["user"]}>
+            <UserBookedData />
+          </RoleRoute>
+        ),
       },
       {
         path: "/dashboard/payments",
-        element: <PaymentStatus />,
+        element: (
+          <RoleRoute allowedRoles={["user"]}>
+            <PaymentStatus />
+          </RoleRoute>
+        ),
       },
-      // admin dashboard links
-      {
-        path: "/dashboard/profile",
-        element: <ProfilePage />,
-      },
+
+      // admin dashboard
       {
         path: "/dashboard/admin-decorators",
-        element: <ManageDecorators />,
+        element: (
+          <RoleRoute allowedRoles={["admin"]}>
+            <ManageDecorators />
+          </RoleRoute>
+        ),
       },
       {
         path: "/dashboard/admin-add-Services",
-        element: <AddService />,
+        element: (
+          <RoleRoute allowedRoles={["admin"]}>
+            <AddService />
+          </RoleRoute>
+        ),
       },
       {
         path: "/dashboard/admin-services",
-        element: <ServiceManagement />,
+        element: (
+          <RoleRoute allowedRoles={["admin"]}>
+            <ServiceManagement />
+          </RoleRoute>
+        ),
       },
       {
         path: "/dashboard/admin-bookings",
-        element: <ManageBookings />,
+        element: (
+          <RoleRoute allowedRoles={["admin"]}>
+            <ManageBookings />
+          </RoleRoute>
+        ),
       },
       {
         path: "/dashboard/admin-assign",
-        element: <AssignDecorators />,
+        element: (
+          <RoleRoute allowedRoles={["admin"]}>
+            <AssignDecorators />
+          </RoleRoute>
+        ),
       },
       {
         path: "/dashboard/admin-revenue",
-        element: <RevenueMonitoring />,
+        element: (
+          <RoleRoute allowedRoles={["admin"]}>
+            <RevenueMonitoring />
+          </RoleRoute>
+        ),
       },
       {
         path: "/dashboard/admin-analytics",
-        element: <AnalyticsCharts />,
+        element: (
+          <RoleRoute allowedRoles={["admin"]}>
+            <AnalyticsCharts />
+          </RoleRoute>
+        ),
       },
-      // decorator dashboard links
-      {
-        path: "/dashboard/profile",
-        element: <ProfilePage />,
-      },
+
+      // decorator dashboard
       {
         path: "/dashboard/decorator-projects",
-        element: <MyAssignedProject />,
+        element: (
+          <RoleRoute allowedRoles={["decorator"]}>
+            <MyAssignedProject />
+          </RoleRoute>
+        ),
       },
       {
         path: "/dashboard/decorator-schedule",
-        element: <TodaysSchedule />,
+        element: (
+          <RoleRoute allowedRoles={["decorator"]}>
+            <TodaysSchedule />
+          </RoleRoute>
+        ),
       },
       {
         path: "/dashboard/decorator-status",
-        element: <UpdateWorkStatus />,
+        element: (
+          <RoleRoute allowedRoles={["decorator"]}>
+            <UpdateWorkStatus />
+          </RoleRoute>
+        ),
       },
       {
         path: "/dashboard/decorator-earnings",
-        element: <EarningsSummary />,
+        element: (
+          <RoleRoute allowedRoles={["decorator"]}>
+            <EarningsSummary />
+          </RoleRoute>
+        ),
       },
     ],
   },
